@@ -175,11 +175,11 @@ const DetailedReceiptPage = () => {
     
                      if (fileType === "application/pdf") {
                        return (
-                         <AttachmentViewer type="pdf" src={`data:${fileType};base64,${attachment.split(".")[1]}`} />
+                         <AttachmentViewer key="receiptPDF" type="pdf" src={`data:${fileType};base64,${attachment.split(".")[1]}`} />
                        );
                      } else if (fileType.includes("image")) {
                        return (
-                        <AttachmentViewer type="image" src={`data:${fileType};base64,${attachment.split(".")[1]}`} />
+                        <AttachmentViewer key="receiptImage" type="image" src={`data:${fileType};base64,${attachment.split(".")[1]}`} />
                        )
                      } else {
                      return (
