@@ -178,12 +178,9 @@ const DetailedReceiptPage = () => {
                          <AttachmentViewer type="pdf" src={`data:${fileType};base64,${attachment.split(".")[1]}`} />
                        );
                      } else if (fileType.includes("image")) {
-                       return <img
-                       
-                         src={`data:${fileType};base64,${attachment.split(".")[1]}`}
-                         key={index}
-                         className="mx-auto max-w-[600px] w-auto rounded-lg border-2 border-white/20"
-                       />
+                       return (
+                        <AttachmentViewer type="image" src={`data:${fileType};base64,${attachment.split(".")[1]}`} />
+                       )
                      } else {
                      return (
                        <a
