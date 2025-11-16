@@ -9,6 +9,7 @@ import Spinner from "../components/universal/Spinner";
 import AdminBadge from "../components/admin/AdminBadge";
 import { PaperClipIcon } from "@heroicons/react/24/solid";
 import { fetchCompleteUserReceipt } from "../api/userAPI";
+import AttachmentViewer from "../components/receipt/AttachmentViewer";
 
 const DetailedReceiptPage = () => {
 
@@ -174,18 +175,14 @@ const DetailedReceiptPage = () => {
     
                      if (fileType === "application/pdf") {
                        return (
-                         <iframe
-                           src={"data:application/pdf;base64," + attachment.split(".")[1]}
-                           key={index}
-                          className="w-full h-[400px] rounded-lg border-2 border-white/20"
-                         />
+                         <AttachmentViewer type="pdf" src={`data:${fileType};base64,${attachment.split(".")[1]}`} />
                        );
                      } else if (fileType.includes("image")) {
                        return <img
                        
                          src={`data:${fileType};base64,${attachment.split(".")[1]}`}
                          key={index}
-                         className="ml-auto mr-auto w-full max-w-[1200px] rounded-lg border-2 border-white/20"
+                         className="mx-auto max-w-[600px] w-auto rounded-lg border-2 border-white/20"
                        />
                      } else {
                      return (
