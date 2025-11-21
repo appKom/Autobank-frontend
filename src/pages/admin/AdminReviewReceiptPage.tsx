@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import Spinner from "../../components/universal/Spinner";
 import AdminBadge from "../../components/admin/AdminBadge";
+import AttachmentViewer from "../../components/receipt/AttachmentViewer";
 
 const AdminReviewReceiptPage = () => {
   const receiptid = useParams<{ receiptid: string }>().receiptid;
@@ -196,24 +197,20 @@ const AdminReviewReceiptPage = () => {
               {data.attachmentCount != 0 && (
                 <div className="bg-white bg-opacity-10 text-white p-3 rounded w-full">
                   {data.attachments.map((attachment, index) => {
-                   const fileType = attachment.split(".")[0].replace(":", "/");
-    
-                    if (fileType === "application/pdf") {
-                      return (
-                        <iframe
-                          src={"data:application/pdf;base64," + attachment.split(".")[1]}
-                          key={index}
-                         className="w-full h-[400px] rounded-lg border-2 border-white/20"
-                        />
-                      );
-                    } else if (fileType.includes("image")) {
-                      return <img
-                      
-                        src={`data:${fileType};base64,${attachment.split(".")[1]}`}
-                        key={index}
-                        className="ml-auto mr-auto w-full max-w-[1200px]  rounded-lg border-2 border-white/20"
-                      />
-                    } else {
+                  const fileType = attachment.split(".")[0].replace(":", "/");
+                  const base64 = attachment.split(".")[1];
+                    
+                  // PDF attachment
+                  if (fileType === "application/pdf") {
+                    return (
+                      <AttachmentViewer type="pdf" src={`data:application/pdf;base64,${base64}`} />
+                    );
+                  } else if (fileType.includes("image")) {
+                    // image attachment
+                    return (
+                      <AttachmentViewer type="image" src={`data:application/pdf;base64,${base64}`} />
+                    )
+                  } else {
                     return (
                       <a
                         href={`data:${fileType};base64,${attachment.split(".")[1]}`}
@@ -247,9 +244,9 @@ const AdminReviewReceiptPage = () => {
                   className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 mx-auto focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md bg-white bg-opacity-20 text-white"
                   required
                 >
-                  <option value="">Velg status</option>
-                  <option value="APPROVED">Godkjent</option>
-                  <option value="DENIED">Ikke godkjent</option>
+                  <option value="" className="text-black">Velg status</option>
+                  <option value="APPROVED" className="text-black">Godkjent</option>
+                  <option value="DENIED" className="text-black">Ikke godkjent</option>
                 </select>
               </div>
               <div className="">
@@ -268,7 +265,7 @@ const AdminReviewReceiptPage = () => {
               </div>
               <button
                 type="submit"
-                className="w-full  flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
                 Send review
               </button>

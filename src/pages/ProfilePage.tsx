@@ -11,7 +11,7 @@ const ProfilePage = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(); // The debounced value
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
-  const [receiptStatus, setReceiptStatus] = useState<string | null>(null);
+  const [receiptStatus, setReceiptStatus] = useState<string | null>("NONE");
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
