@@ -1,5 +1,4 @@
-import money1 from "../../resources/frontpage/money1.png";
-import money2 from "../../resources/frontpage/money2.png";
+
 
 export default function FrontInfo() {
   return (
@@ -11,13 +10,6 @@ export default function FrontInfo() {
   
       </div>
 
-      <img src={money1} alt="" className="money-money object-contain w-[500px] h-auto absolute top-[30%] hidden xl:block
-                  right-[-50px] xl:right-[-50px]"/>
-
-
-      <div className="flipped absolute top-[20%] hidden xl:block left-[-250px] xl:left-[-50px]">
-        <img src={money2} alt="" className="money-money object-contain w-[500px] h-auto " />
-      </div>
     </div>
   );
 }
