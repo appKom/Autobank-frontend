@@ -10,21 +10,25 @@ export default function AdminDashboard() {
           <p className="text-white">Godkjenn kvitteringer og søknader</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* la stå, style når vi får fikset søknader */}
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">  */}
+        <div className="flex justify-center">
+          <div className="w-full max-w-sm">
           {/* Main action cards */}
-          <AdminCard
-            title="Kvitteringer"
-            description="Godkjenn kvitteringer"
-            icon={<Receipt className="h-6 w-6" />}
-            href="/admin/kvittering"
-          />
+            <AdminCard
+              title="Kvitteringer"
+              description="Godkjenn kvitteringer"
+              icon={<Receipt className="h-6 w-6" />}
+              href="/admin/kvittering"
+            />
+          </div>
 
-          <AdminCard
+          {/* <AdminCard
             title="Søknader"
             description="Godkjenn søknader"
             icon={<FileText className="h-6 w-6" />}
             href="/admin/soknad"
-          />
+          /> */}
         </div>
       </div>
     </div>
