@@ -13,13 +13,14 @@ import {
   ReceiptReview,
 } from "../../api/adminReceiptAPI";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Spinner from "../../components/universal/Spinner";
 import AdminBadge from "../../components/admin/AdminBadge";
 import AttachmentViewer from "../../components/receipt/AttachmentViewer";
 
 const AdminReviewReceiptPage = () => {
   const receiptid = useParams<{ receiptid: string }>().receiptid;
+  const navigate = useNavigate();
 
   const { data, isError, isLoading } = useQuery({
     queryKey: ["completereceipt", receiptid],
@@ -50,7 +51,7 @@ const AdminReviewReceiptPage = () => {
     try {
       await postReceiptReview(receiptreview);
       alert("Review sent");
-      window.location.reload();
+      navigate("/admin/kvittering");
     } catch (error) {
       console.error(error);
       alert("Error sending review");
