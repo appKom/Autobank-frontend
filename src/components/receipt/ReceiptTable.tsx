@@ -31,7 +31,15 @@ const ReceiptTable = ({
   const handleSetHistory = () => {
     setReceiptStatus(receiptStatus === "DONE" ? null : "DONE");
   };
-  
+
+  const sortedReceipts = React.useMemo(() => {
+    if (!receipts) return [];
+    return [...receipts].sort(
+      (a, b) =>
+        new Date(b.receiptCreatedAt).getTime() -
+        new Date(a.receiptCreatedAt).getTime()
+    );
+  }, [receipts]);
 
   return (
     <div>
@@ -79,7 +87,7 @@ const ReceiptTable = ({
               </tr>
             </thead>
             <tbody>
-              {receipts.map((receipt) => (
+              {sortedReceipts.map((receipt) => (
                 <ReceiptRow key={receipt.receiptId} receipt={receipt}/>
               ))}
             </tbody>
