@@ -25,7 +25,7 @@ type NavdropdownProps = {
 
 const routes = [
   { name: "Kvittering", path: `${import.meta.env.BASE_URL}kvittering` },
-  { name: "Søknad", path: `${import.meta.env.BASE_URL}soknad` },
+  // { name: "Søknad", path: `${import.meta.env.BASE_URL}soknad` },
   { name: "Min side", path: `${import.meta.env.BASE_URL}minside` },
 ];
 
@@ -140,12 +140,12 @@ const Navbar = () => {
             className="flex justify-end abolute right-0 lg:hidden"
           >
             <Bars3Icon
-              className={`cursor-pointer text-white h-9 relative justify-self-end absolute top-0 right-0 transition-transform transform ${
+              className={`cursor-pointer text-white h-9 justify-self-end absolute top-0 right-0 transition-transform transform ${
                 showNavDropdown ? "rotate-45 opacity-0" : "rotate-0 opacity-100"
               }`}
             />
             <XMarkIcon
-              className={`cursor-pointer text-white h-9 relative justify-self-end absolute top-0 right-0 transition-transform transform ${
+              className={`cursor-pointer text-white h-9 justify-self-end absolute top-0 right-0 transition-transform transform ${
                 showNavDropdown
                   ? "rotate-0 opacity-100"
                   : "rotate-45 opacity-0 hidden"
