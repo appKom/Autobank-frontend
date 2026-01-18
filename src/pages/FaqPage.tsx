@@ -71,15 +71,6 @@ export default function FaqPage() {
             </p>
           </section>
 
-          <section className="mb-6">
-            <h3 className="text-xl font-semibold mb-2 underline">Onlinepotten</h3>
-            <p className="mb-4">
-              Ved kjøp som er godkjent av onlinepotten skal ansvarlig enhent på kvitteringsskjemaet settes til
-              onlinepotten. Slike kvitteringer betales tilbake av økonomiansvarlig. Online har også en del
-              bedriftskontoer som gir diverse rabatter på mat, disse kan brukes for kjøp til onlinepotten ved avtale.
-            </p>
-          </section>
-
           <section>
             <h3 className="text-xl font-semibold mb-2 underline">Brudd på frister:</h3>
             <p>
