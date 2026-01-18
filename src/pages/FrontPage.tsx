@@ -20,7 +20,7 @@ export default function frontPage() {
         </header>
         <div className="flex flex-row items-center space-x-10 mx-10 mb-8">
           <div className="w-full lg:w-1/2">
-            <p className="text-white px-20 text-left text-xl">
+            <p className="text-white text-left text-xl md:px-20">
               Trenger du økonomisk støtte til diverse arrangement? Autobank er
               et hjelpemiddel for studenter i Online som ønsker å søke om
               økonomisk støtte eller sende inn kvitteringer for personlige
