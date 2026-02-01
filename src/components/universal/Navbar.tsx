@@ -54,7 +54,7 @@ const NavDropdown = (props: NavdropdownProps) => {
           <div className="flex hover:bg-green-900 items-center w-full rounded-lg justify-center relativ p-4  h-[50px] bg-[#2e6e53] justify-self-end relative z-20">
             <button
               onClick={() => props.logout()}
-              className="flex items-center w-full justify-center relativ p-4  h-[50px] justify-self-end relative z-20"
+              className="flex items-center w-full justify-center relativ p-4 h-[50px] justify-self-end relative z-20"
             >
               <p>Logg ut</p>
               <LogOutIcon className="w-4 h-4 m-3" />
@@ -165,7 +165,7 @@ const Navbar = () => {
 
           {/* Navbar large width */}
           {isAuthenticated ? (
-            <div className="hidden lg:flex flex justify-self-end absolute right-[20px] gap-10 items-center">
+            <div className="hidden lg:flex justify-self-end absolute right-[20px] gap-10 items-center">
               <div className="flex justify-self-end md:static right-[20px] gap-10 items-center">
                 <div
                   className={
@@ -189,7 +189,7 @@ const Navbar = () => {
 
                   {routes.map((route) => (
                     <a
-                      className={`relative text-white text-[20px] p-3 md:ml-4 rounded-[10px] hover:bg-green-800 cursor-pointer ${
+                      className={`relative text-white text-[20px] px-3 py-2 md:ml-4 rounded-[10px] hover:bg-[#1A4B36] cursor-pointer ${
                         location === route.path ? "active-link" : ""
                       }`}
                       href={route.path}

@@ -2,7 +2,7 @@
 
 export default function FrontInfo() {
   return (
-    <div className=" bg-[#282c34] w-full h-screen">
+    <div className=" bg-[#1a4b36] w-full h-screen">
       <div className="text-center text-white absolute w-[100%] top-[50%] font-bold text-4xl">
         <span className="block">Velkommen til Autobank!</span>
         {/* <span className="block text-2xl">Søk om støtte eller</span> */}
