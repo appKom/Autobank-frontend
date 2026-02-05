@@ -78,7 +78,6 @@ const ReceiptPage = () => {
 
     const validFiles: File[] = [];
     const invalidTypeFiles: File[] = [];
-    const tooLargeFiles: File[] = [];
 
     files.forEach((file) => {
       const extension = file.name.split(".").pop()?.toLowerCase();
@@ -88,18 +87,10 @@ const ReceiptPage = () => {
 
       if (!isValidType) {
         invalidTypeFiles.push(file);
-      } else if (file.size > MAX_FILE_SIZE) {
-        tooLargeFiles.push(file);
       } else {
         validFiles.push(file);
       }
     });
-
-    if (tooLargeFiles.length > 0) {
-      alert(
-        `Fil for stor. Prøv å laste opp en mindre fil/bilde. Maksimal filstørrelse er 5MB. Følgende filer ble ignorert: ${tooLargeFiles.map((f) => f.name).join(", ")}`,
-      );
-    }
 
     if (invalidTypeFiles.length > 0) {
       alert(
@@ -202,11 +193,31 @@ const ReceiptPage = () => {
         cardnumber: usedOnlineCard ? formdata.card_number : "",
       };
 
+      const convertedAttachments = await Promise.all(
+        [...attachments].map(async (file) => ({
+          name: file.name,
+          base64: await fileToBase64(file),
+        })),
+      );
+
+      // Check file sizes after conversion (base64 is ~33% larger than binary)
+      const maxBase64Size = MAX_FILE_SIZE * 1.34; // Account for base64 overhead
+      const tooLargeFiles = convertedAttachments.filter(
+        (attachment) => attachment.base64.length > maxBase64Size,
+      );
+
+      if (tooLargeFiles.length > 0) {
+        setDisableSubmit(false);
+        alert(
+          "Fil for stor. Prøv å laste opp en mindre fil/bilde. Maksimal filstørrelse er 5MB. Følgende filer er for store: " +
+            tooLargeFiles.map((f) => f.name).join(", "),
+        );
+        return;
+      }
+
       const body: ReceiptRequestBody = {
         receipt: updatedFormData,
-        attachments: await Promise.all(
-          [...attachments].map(async (file) => await fileToBase64(file)),
-        ),
+        attachments: convertedAttachments.map((a) => a.base64),
         receiptPaymentInformation: paymentInfo,
       };
 
