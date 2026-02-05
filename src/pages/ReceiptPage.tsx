@@ -63,7 +63,7 @@ const ReceiptPage = () => {
     "image/heif",
   ];
 
-  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB per file
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB per file
 
   const auth = useAuth();
   const { user } = auth;
@@ -97,7 +97,7 @@ const ReceiptPage = () => {
 
     if (tooLargeFiles.length > 0) {
       alert(
-        `Fil for stor. Prøv å laste opp en mindre fil/bilde. Maksimal filstørrelse er 10MB. Følgende filer ble ignorert: ${tooLargeFiles.map((f) => f.name).join(", ")}`,
+        `Fil for stor. Prøv å laste opp en mindre fil/bilde. Maksimal filstørrelse er 5MB. Følgende filer ble ignorert: ${tooLargeFiles.map((f) => f.name).join(", ")}`,
       );
     }
 
