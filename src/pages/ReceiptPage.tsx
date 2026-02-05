@@ -63,6 +63,8 @@ const ReceiptPage = () => {
     "image/heif",
   ];
 
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB per file
+
   const auth = useAuth();
   const { user } = auth;
 
@@ -74,24 +76,32 @@ const ReceiptPage = () => {
   const onFileChange = async (files: File[]) => {
     const validExtensions = ["pdf", "png", "jpg", "jpeg", "heic", "heif"];
 
-    const validFiles = files.filter((file) => {
+    const validFiles: File[] = [];
+    const invalidTypeFiles: File[] = [];
+    const tooLargeFiles: File[] = [];
+
+    files.forEach((file) => {
       const extension = file.name.split(".").pop()?.toLowerCase();
-      // Check both MIME type and file extension for more robust validation
-      return (
+      const isValidType =
         allowedTypes.includes(file.type) ||
-        (extension && validExtensions.includes(extension))
-      );
+        (extension && validExtensions.includes(extension));
+
+      if (!isValidType) {
+        invalidTypeFiles.push(file);
+      } else if (file.size > MAX_FILE_SIZE) {
+        tooLargeFiles.push(file);
+      } else {
+        validFiles.push(file);
+      }
     });
 
-    const invalidFiles = files.filter((file) => {
-      const extension = file.name.split(".").pop()?.toLowerCase();
-      return (
-        !allowedTypes.includes(file.type) &&
-        (!extension || !validExtensions.includes(extension))
+    if (tooLargeFiles.length > 0) {
+      alert(
+        `Fil for stor. Prøv å laste opp en mindre fil/bilde. Maksimal filstørrelse er 10MB. Følgende filer ble ignorert: ${tooLargeFiles.map((f) => f.name).join(", ")}`,
       );
-    });
+    }
 
-    if (invalidFiles.length > 0) {
+    if (invalidTypeFiles.length > 0) {
       alert(
         "Bare PDF, JPG, PNG, JPEG eller HEIC filer er tillatt. Ugyldige filer ble ignorert.",
       );
