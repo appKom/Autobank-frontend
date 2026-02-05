@@ -10,7 +10,6 @@ import { submitReceipt } from "../api/formsAPI";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
 
-
 interface Committee {
   id: string;
   name: string;
@@ -55,23 +54,47 @@ const ReceiptPage = () => {
   const [cardNumber, setCardNumber] = useState("");
 
   const [attachments, setAttachments] = useState<File[]>([]);
-  const allowedTypes = ["application/pdf", "image/png", "image/jpeg", "image/jpg"];
+  const allowedTypes = [
+    "application/pdf",
+    "image/png",
+    "image/jpeg",
+    "image/jpg",
+    "image/heic",
+    "image/heif",
+  ];
 
   const auth = useAuth();
   const { user } = auth;
 
- 
   const { data, isError } = useQuery({
     queryKey: ["committees"],
     queryFn: () => fetchCommittees(),
   });
 
   const onFileChange = async (files: File[]) => {
-    const validFiles = files.filter((file) => allowedTypes.includes(file.type));
-    const invalidFiles = files.filter((file) => !allowedTypes.includes(file.type));
+    const validExtensions = ["pdf", "png", "jpg", "jpeg", "heic", "heif"];
+
+    const validFiles = files.filter((file) => {
+      const extension = file.name.split(".").pop()?.toLowerCase();
+      // Check both MIME type and file extension for more robust validation
+      return (
+        allowedTypes.includes(file.type) ||
+        (extension && validExtensions.includes(extension))
+      );
+    });
+
+    const invalidFiles = files.filter((file) => {
+      const extension = file.name.split(".").pop()?.toLowerCase();
+      return (
+        !allowedTypes.includes(file.type) &&
+        (!extension || !validExtensions.includes(extension))
+      );
+    });
 
     if (invalidFiles.length > 0) {
-      alert("Bare PDF eller bildefiler (JPG, PNG, JPEG) er tillatt. Ugyldige filer ble ignorert.");
+      alert(
+        "Bare PDF, JPG, PNG, JPEG eller HEIC filer er tillatt. Ugyldige filer ble ignorert.",
+      );
     }
 
     setAttachments(validFiles);
@@ -149,8 +172,8 @@ const ReceiptPage = () => {
 
   const formatCardNumber = (value: string) => {
     return value
-      .replace(/\D/g, "")       
-      .replace(/(.{4})/g, "$1 ") 
+      .replace(/\D/g, "")
+      .replace(/(.{4})/g, "$1 ")
       .trim();
   };
 
@@ -161,33 +184,31 @@ const ReceiptPage = () => {
     const updatedFormData = { ...formdata, amount: numericAmount };
 
     setDisableSubmit(true);
-    const paymentInfo: PaymentInformation = {
-      usedOnlineCard: usedOnlineCard,
-      accountnumber: usedOnlineCard ? "" : formdata.account_number,
-      cardnumber: usedOnlineCard ? formdata.card_number : "",
-    };
-    const receipt: Receipt = {
-      amount: formdata.amount,
-      committee_id: formdata.committee_id,
-      name: formdata.name,
-      description: formdata.description,
-      id: 0,
-    };
-    const body: ReceiptRequestBody = {
-      receipt: updatedFormData,
-      attachments: await Promise.all(
-        [...attachments].map(async (file) => await fileToBase64(file)),
-      ),
-      receiptPaymentInformation: paymentInfo,
-    };
 
     try {
+      const paymentInfo: PaymentInformation = {
+        usedOnlineCard: usedOnlineCard,
+        accountnumber: usedOnlineCard ? "" : formdata.account_number,
+        cardnumber: usedOnlineCard ? formdata.card_number : "",
+      };
+
+      const body: ReceiptRequestBody = {
+        receipt: updatedFormData,
+        attachments: await Promise.all(
+          [...attachments].map(async (file) => await fileToBase64(file)),
+        ),
+        receiptPaymentInformation: paymentInfo,
+      };
+
       await submitReceipt(body);
       alert("Kvittering sendt inn!");
-      // TODO: Fix with popup success message in home something
       navigate("/?receiptsubmittedsuccess=1");
-    } catch (e) {
-      alert("Noe gikk galt, prøv igjen senere");
+    } catch (e: any) {
+      if (e.message?.includes("HEIC")) {
+        alert(e.message);
+      } else {
+        alert("Noe gikk galt, prøv igjen senere");
+      }
     }
 
     setDisableSubmit(false);
@@ -213,7 +234,7 @@ const ReceiptPage = () => {
             Kort brukt til kjøpet
           </h1>
         </div>
-    
+
         <div className="flex justify-center gap-5 mt-[10px] text-white mb-[10px]">
           <div className="flex items-center gap-3">
             <input
@@ -264,7 +285,7 @@ const ReceiptPage = () => {
                 className="text-black p-3 rounded w-full"
                 onChange={(e) => {
                   const raw = e.target.value.replace(/\D/g, "");
-                  const value = raw.slice(0, 6);  // Limit to 6 characters
+                  const value = raw.slice(0, 6); // Limit to 6 characters
                   console.log(value);
                   setAmountInput(value);
                 }}
@@ -345,7 +366,7 @@ const ReceiptPage = () => {
                 className="text-black p-3 rounded w-full"
                 onChange={(e) => {
                   const raw = e.target.value.replace(/\D/g, "");
-                  const value = raw.slice(0, 6);  // Limit to 6 characters
+                  const value = raw.slice(0, 6); // Limit to 6 characters
                   console.log(value);
                   setAmountInput(value);
                 }}
@@ -414,10 +435,7 @@ const ReceiptPage = () => {
         </div>
         <div className="flex-col mx-5">
           <p className="text-white w-full text-left text-l mb-[5px]">Vedlegg</p>
-          <FileUpload 
-            files={attachments}
-            onFileChange={onFileChange} 
-            />
+          <FileUpload files={attachments} onFileChange={onFileChange} />
           <p className="text-red-500 text-sm min-h-[1.25rem]">
             {errors.attachments || " "}
           </p>
