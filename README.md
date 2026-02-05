@@ -8,7 +8,7 @@ For admins they can review applications and receipts, either approving or reject
 ### 1. Clone the repository
 
 ```bash
-git https://github.com/appKom/gnocchi.git
+git https://github.com/appKom/Autobank-frontend.git
 cd gnocchi
 ```
 
