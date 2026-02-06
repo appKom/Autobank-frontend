@@ -174,7 +174,7 @@ const Navbar = () => {
                 >
                   {userInfo?.isadmin && (
                     <a
-                      className={`relative text-white text-[20px] p-3  md:ml-4 rounded-[10px] hover:bg-green-800 cursor-pointer ${
+                      className={`relative text-white text-[20px] p-3  md:ml-4 rounded-[10px] hover:bg-[#1A4B36] cursor-pointer ${
                         location === `${import.meta.env.BASE_URL}admin`
                           ? "active-link"
                           : ""
@@ -188,7 +188,7 @@ const Navbar = () => {
 
                   {routes.map((route) => (
                     <a
-                      className={`relative text-white text-[20px] px-3 py-2 md:ml-4 rounded-[10px] hover:bg-[#1A4B36] cursor-pointer ${
+                      className={`relative text-white text-[20px] p-3 md:ml-4 rounded-[10px] hover:bg-[#1A4B36] cursor-pointer ${
                         location === route.path ? "active-link" : ""
                       }`}
                       href={route.path}
