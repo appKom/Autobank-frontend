@@ -1,10 +1,7 @@
 import FrontInfo from "../components/frontpage/FrontInfo";
 import Topbar from "../components/frontpage/TopBar";
-import Bottombar from "../components/frontpage/BottomBar";
 import Button from "../components/universal/Button";
 import happy from "../resources/frontpage/happy.png";
-
-import useAutobankStore from "../store/autobankstore";
 import { useAuth } from "react-oidc-context";
 export default function frontPage() {
   const { isAuthenticated, signinRedirect } = useAuth();
@@ -12,8 +9,9 @@ export default function frontPage() {
   return (
     <div className="bg-[#2E6E53] flex flex-col">
       <Topbar />
-      <FrontInfo />
-      <Bottombar />
+      <div className="mt-35">
+        <FrontInfo />
+      </div>
       <div className="z-30 mb-8">
         <header className="w-full lg:w-1/2 text-white text-5xl font-bold z-30 px-10 mb-8">
           Autobank

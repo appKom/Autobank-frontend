@@ -8,7 +8,6 @@ import {
   XMarkIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
-import { logoutUser } from "../../utils/userutils";
 import { checkUserResponse } from "../../pages/Authcallback";
 import useAutobankStore from "../../store/autobankstore";
 import { useAuth } from "react-oidc-context";
@@ -137,15 +136,15 @@ const Navbar = () => {
           {/* Navbar small-medium width */}
           <button
             onClick={toggleNavbarDropdown}
-            className="flex justify-end abolute right-0 lg:hidden"
+            className="flex justify-end abolute lg:hidden"
           >
             <Bars3Icon
-              className={`cursor-pointer text-white h-9 justify-self-end absolute top-0 right-0 transition-transform transform ${
+              className={`cursor-pointer text-white h-9 justify-self-end absolute top-3 right-3 transition-transform transform ${
                 showNavDropdown ? "rotate-45 opacity-0" : "rotate-0 opacity-100"
               }`}
             />
             <XMarkIcon
-              className={`cursor-pointer text-white h-9 justify-self-end absolute top-0 right-0 transition-transform transform ${
+              className={`cursor-pointer text-white h-9 justify-self-end absolute top-3 right-3 transition-transform transform ${
                 showNavDropdown
                   ? "rotate-0 opacity-100"
                   : "rotate-45 opacity-0 hidden"
