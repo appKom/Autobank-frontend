@@ -30,7 +30,7 @@ const Footer = () => {
   ];
 
   return (
-    <div className="bg-[#2e6e53] text-white py-10">
+    <div className="bg-[#2e6e53] text-white py-10 relative z-30">
       <div className="flex justify-center items-center mb-10">
         <img
           src={`${import.meta.env.BASE_URL}resources/logo/online-white.png`}

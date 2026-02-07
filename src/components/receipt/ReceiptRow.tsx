@@ -30,7 +30,7 @@ const ReceiptRow = ({ receipt }: ReceiptOverviewProps) => {
       }
       className="h-[100px] shadow-black border-violet-500 mb-5 ml-0 group hover:cursor-pointer"
     >
-      <td className="bg-green-200 flex items-center justify-center h-[100px] rounded-tl rounded-bl">
+      <td className="bg-[#b0deca] flex items-center justify-center h-[100px] rounded-tl rounded-bl">
         <div className="relative">
           {receipt.latestReviewStatus === "APPROVED" ? (
             <IoMdCheckmark color="green" className="text-3xl" />
@@ -48,18 +48,18 @@ const ReceiptRow = ({ receipt }: ReceiptOverviewProps) => {
           </span>
         </div>
       </td>
-      <td className="bg-green-200 text-left font-semibold hidden md:table-cell">
+      <td className="bg-[#b0deca] text-left font-semibold hidden md:table-cell">
         {receipt.committeeName}
       </td>
-      <td className="bg-green-200 text-left ">{receipt.receiptName}</td>
-      <td className="bg-green-200 text-left hidden lg:table-cell  font-semibold ">
+      <td className="bg-[#b0deca] text-left ">{receipt.receiptName}</td>
+      <td className="bg-[#b0deca] text-left hidden lg:table-cell  font-semibold ">
         {receipt.paymentOrCard === "Payment" ? "Utlegg" : "Kort"}
       </td>
-      <td className="bg-green-200 text-left max-h-3 hidden lg:table-cell max-w-[150px] overflow-hidden line-clamp-3">
+      <td className="bg-[#b0deca] text-left max-h-3 hidden lg:table-cell max-w-[150px] overflow-hidden line-clamp-3">
         {receipt.receiptDescription.slice(0, 60)}
         {receipt.receiptDescription.length > 60 ? "..." : ""}
       </td>
-      <td className="bg-green-200 text-center w-[110px] rounded-tr rounded-br font-semibold">
+      <td className="bg-[#b0deca] text-center w-[110px] rounded-tr rounded-br font-semibold">
         {`${new Date(receipt.receiptCreatedAt).getDate()}.${
           new Date(receipt.receiptCreatedAt).getMonth() + 1
         } ${new Date(receipt.receiptCreatedAt).getFullYear()}`}

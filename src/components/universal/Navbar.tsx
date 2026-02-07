@@ -8,7 +8,6 @@ import {
   XMarkIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
-import { logoutUser } from "../../utils/userutils";
 import { checkUserResponse } from "../../pages/Authcallback";
 import useAutobankStore from "../../store/autobankstore";
 import { useAuth } from "react-oidc-context";
@@ -54,7 +53,7 @@ const NavDropdown = (props: NavdropdownProps) => {
           <div className="flex hover:bg-green-900 items-center w-full rounded-lg justify-center relativ p-4  h-[50px] bg-[#2e6e53] justify-self-end relative z-20">
             <button
               onClick={() => props.logout()}
-              className="flex items-center w-full justify-center relativ p-4  h-[50px] justify-self-end relative z-20"
+              className="flex items-center w-full justify-center relativ p-4 h-[50px] justify-self-end relative z-20"
             >
               <p>Logg ut</p>
               <LogOutIcon className="w-4 h-4 m-3" />
@@ -137,15 +136,15 @@ const Navbar = () => {
           {/* Navbar small-medium width */}
           <button
             onClick={toggleNavbarDropdown}
-            className="flex justify-end abolute right-0 lg:hidden"
+            className="flex justify-end abolute lg:hidden"
           >
             <Bars3Icon
-              className={`cursor-pointer text-white h-9 justify-self-end absolute top-0 right-0 transition-transform transform ${
+              className={`cursor-pointer text-white h-9 justify-self-end absolute top-3 right-3 transition-transform transform ${
                 showNavDropdown ? "rotate-45 opacity-0" : "rotate-0 opacity-100"
               }`}
             />
             <XMarkIcon
-              className={`cursor-pointer text-white h-9 justify-self-end absolute top-0 right-0 transition-transform transform ${
+              className={`cursor-pointer text-white h-9 justify-self-end absolute top-3 right-3 transition-transform transform ${
                 showNavDropdown
                   ? "rotate-0 opacity-100"
                   : "rotate-45 opacity-0 hidden"
@@ -165,7 +164,7 @@ const Navbar = () => {
 
           {/* Navbar large width */}
           {isAuthenticated ? (
-            <div className="hidden lg:flex flex justify-self-end absolute right-[20px] gap-10 items-center">
+            <div className="hidden lg:flex justify-self-end absolute right-[20px] gap-10 items-center">
               <div className="flex justify-self-end md:static right-[20px] gap-10 items-center">
                 <div
                   className={
@@ -175,7 +174,7 @@ const Navbar = () => {
                 >
                   {userInfo?.isadmin && (
                     <a
-                      className={`relative text-white text-[20px] p-3  md:ml-4 rounded-[10px] hover:bg-green-800 cursor-pointer ${
+                      className={`relative text-white text-[20px] p-3  md:ml-4 rounded-[10px] hover:bg-[#1A4B36] cursor-pointer ${
                         location === `${import.meta.env.BASE_URL}admin`
                           ? "active-link"
                           : ""
@@ -189,7 +188,7 @@ const Navbar = () => {
 
                   {routes.map((route) => (
                     <a
-                      className={`relative text-white text-[20px] p-3 md:ml-4 rounded-[10px] hover:bg-green-800 cursor-pointer ${
+                      className={`relative text-white text-[20px] p-3 md:ml-4 rounded-[10px] hover:bg-[#1A4B36] cursor-pointer ${
                         location === route.path ? "active-link" : ""
                       }`}
                       href={route.path}

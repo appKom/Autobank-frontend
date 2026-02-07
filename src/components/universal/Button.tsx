@@ -12,11 +12,11 @@ const Button = (props: Props) => {
   let sizeClasses = "";
 
   const colorClassesMap = {
-    green: "bg-[#84BBA3] text-black",
+    green: "bg-[#b0deca] text-black",
     blue: "bg-blue-300",
     orange: "bg-orange-300",
     white: "bg-white text-black",
-    darkGreen: "bg-[#2D433A] text-white",
+    darkGreen: "bg-[#1a4b36] text-white",
   };
 
   // Use the `props.color` to dynamically get the class, with a fallback if needed.
