@@ -9,9 +9,7 @@ export default function frontPage() {
   return (
     <div className="bg-[#2E6E53] flex flex-col">
       <Topbar />
-      <div className="mt-35">
-        <FrontInfo />
-      </div>
+      <FrontInfo />
       <div className="z-30 mb-8">
         <header className="w-full lg:w-1/2 text-white text-5xl font-bold z-30 px-10 mb-8">
           Autobank
