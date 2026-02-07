@@ -9,7 +9,7 @@ For admins they can review applications and receipts, either approving or reject
 
 ```bash
 git https://github.com/appKom/Autobank-frontend.git
-cd gnocchi
+cd Autobank-frontend
 ```
 
 ### 2. Install dependencies
@@ -35,3 +35,8 @@ touch .env
 - **VITE_AUTH0_LOGOUT_URI** - The uri to redirect to after logging out.
 
 - **VITE_BACKEND_URI** - The uri of the backend.
+
+### 4. Run locally
+```bash
+npm run start
+```
