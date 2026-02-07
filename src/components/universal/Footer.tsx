@@ -5,6 +5,7 @@ import React from "react";
 import { BsSlack, BsFacebook, BsInstagram, BsGithub } from "react-icons/bs";
 
 const Footer = () => {
+  const year = new Date().getFullYear();
   const footerLinkSize = 35;
   const footerLinks = [
     {
@@ -75,7 +76,7 @@ const Footer = () => {
           </a>
         </div>
         <div className="pt-10 text-gray-400">
-          ©Online Linjeforening 2024. Alle rettigheter reservert.
+          ©Online Linjeforening {year}. Alle rettigheter reservert.
         </div>
       </div>
     </div>
