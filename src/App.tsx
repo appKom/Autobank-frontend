@@ -6,6 +6,7 @@ import useAutobankStore from "./store/autobankstore";
 import Footer from "./components/universal/Footer";
 import { useAuth } from "react-oidc-context";
 import axios from "axios";
+import { Analytics } from "@vercel/analytics/react"
 
 
 
@@ -22,6 +23,7 @@ function App() {
         <Navbar />
         <Router/>
              <Footer />
+        <Analytics />
       </div>  
 
 
