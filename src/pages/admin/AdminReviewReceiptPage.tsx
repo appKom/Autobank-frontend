@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   CalendarIcon,
   CreditCardIcon,
@@ -6,39 +6,35 @@ import {
   PaperClipIcon,
   ClockIcon,
   CurrencyEuroIcon,
-} from "@heroicons/react/24/outline";
-import {
-  fetchCompleteReceipt,
-  postReceiptReview,
-  ReceiptReview,
-} from "../../api/adminReceiptAPI";
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
-import Spinner from "../../components/universal/Spinner";
-import AdminBadge from "../../components/admin/AdminBadge";
-import AttachmentViewer from "../../components/receipt/AttachmentViewer";
+} from '@heroicons/react/24/outline';
+import { fetchCompleteReceipt, postReceiptReview, ReceiptReview } from '../../api/adminReceiptAPI';
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate, useParams } from 'react-router-dom';
+import Spinner from '../../components/universal/Spinner';
+import AdminBadge from '../../components/admin/AdminBadge';
+import AttachmentViewer from '../../components/receipt/AttachmentViewer';
 
 const AdminReviewReceiptPage = () => {
   const receiptid = useParams<{ receiptid: string }>().receiptid;
   const navigate = useNavigate();
 
   const { data, isError, isLoading } = useQuery({
-    queryKey: ["completereceipt", receiptid],
+    queryKey: ['completereceipt', receiptid],
     queryFn: () => fetchCompleteReceipt(receiptid as string),
   });
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString("no", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    return new Date(dateString).toLocaleString('no', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
-  const [newReviewStatus, setNewReviewStatus] = React.useState("");
-  const [reviewComment, setReviewComment] = React.useState("");
+  const [newReviewStatus, setNewReviewStatus] = React.useState('');
+  const [reviewComment, setReviewComment] = React.useState('');
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,11 +46,11 @@ const AdminReviewReceiptPage = () => {
 
     try {
       await postReceiptReview(receiptreview);
-      alert("Review sent");
-      navigate("/admin/kvittering");
+      alert('Review sent');
+      navigate('/admin/kvittering');
     } catch (error) {
       console.error(error);
-      alert("Error sending review");
+      alert('Error sending review');
     }
   };
 
@@ -67,8 +63,7 @@ const AdminReviewReceiptPage = () => {
         </h1>
         {isError && (
           <div className="bg-red-500 text-white p-4 rounded-lg shadow-lg mx-auto">
-            Det har oppstått en feil. Prøv å logg inn og ut, eller refresh
-            siden.
+            Det har oppstått en feil. Prøv å logg inn og ut, eller refresh siden.
           </div>
         )}
         {isLoading && (
@@ -145,16 +140,15 @@ const AdminReviewReceiptPage = () => {
                 <p className="text-left tracking-wide">Type</p>
                 <div className="flex-col text-left bg-white bg-opacity-10 text-white p-3 rounded w-full">
                   <p className="font-bold mr-auto">
-                    {data.paymentOrCard == "Card" ? "Onlinekort" : "Utlegg"}
+                    {data.paymentOrCard == 'Card' ? 'Onlinekort' : 'Utlegg'}
                   </p>
-                  {data.paymentOrCard === "Card" ? (
+                  {data.paymentOrCard === 'Card' ? (
                     <p>
-                      <span className="font-semibold">Kortnummer:</span>{" "}
-                      {data.cardCardNumber}
+                      <span className="font-semibold">Kortnummer:</span> {data.cardCardNumber}
                     </p>
                   ) : (
                     <p>
-                      <span className="font-semibold">Kontonummer:</span>{" "}
+                      <span className="font-semibold">Kontonummer:</span>{' '}
                       {data.paymentAccountNumber}
                     </p>
                   )}
@@ -166,14 +160,13 @@ const AdminReviewReceiptPage = () => {
                   {data.latestReviewStatus && data.latestReviewCreatedAt != null ? (
                     <div className="flex-col text-left">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs mb-2 font-semibold ${data.latestReviewStatus === "APPROVED"
-                            ? "bg-green-500 text-green-900"
-                            : "bg-red-500 text-red-900"
-                          }`}
+                        className={`px-2 py-1 rounded-full text-xs mb-2 font-semibold ${
+                          data.latestReviewStatus === 'APPROVED'
+                            ? 'bg-green-500 text-green-900'
+                            : 'bg-red-500 text-red-900'
+                        }`}
                       >
-                        {data.latestReviewStatus == "APPROVED"
-                          ? "Godkjent"
-                          : "Ikke godkjent"}
+                        {data.latestReviewStatus == 'APPROVED' ? 'Godkjent' : 'Ikke godkjent'}
                       </span>
                       <p className="ml-2 my-2">
                         <span className="font-bold">Dato: </span>
@@ -192,47 +185,48 @@ const AdminReviewReceiptPage = () => {
             </div>
 
             <div className="flex-col w-full">
-              <p className="text-left tracking-wide">
-                Vedlegg ({data.attachmentCount})
-              </p>
+              <p className="text-left tracking-wide">Vedlegg ({data.attachmentCount})</p>
               {data.attachmentCount != 0 && (
                 <div className="bg-white bg-opacity-10 text-white p-3 rounded w-full">
                   {data.attachments.map((attachment, index) => {
-                  const fileType = attachment.split(".")[0].replace(":", "/");
-                  const base64 = attachment.split(".")[1];
-                    
-                  // PDF attachment
-                  if (fileType === "application/pdf") {
-                    return (
-                      <AttachmentViewer type="pdf" src={`data:application/pdf;base64,${base64}`} />
-                    );
-                  } else if (fileType.includes("image")) {
-                    // image attachment
-                    return (
-                      <AttachmentViewer type="image" src={`data:application/pdf;base64,${base64}`} />
-                    )
-                  } else {
-                    return (
-                      <a
-                        href={`data:${fileType};base64,${attachment.split(".")[1]}`}
-                        key={index}
-                        download
-                        className="flex items-center gap-2"
-                      >
-                        <PaperClipIcon className="h-5 w-5" />
-                        <span>Last ned vedlegg</span>
-                      </a>
-                    );
-                  }
+                    const fileType = attachment.split('.')[0].replace(':', '/');
+                    const base64 = attachment.split('.')[1];
+
+                    // PDF attachment
+                    if (fileType === 'application/pdf') {
+                      return (
+                        <AttachmentViewer
+                          type="pdf"
+                          src={`data:application/pdf;base64,${base64}`}
+                        />
+                      );
+                    } else if (fileType.includes('image')) {
+                      // image attachment
+                      return (
+                        <AttachmentViewer
+                          type="image"
+                          src={`data:application/pdf;base64,${base64}`}
+                        />
+                      );
+                    } else {
+                      return (
+                        <a
+                          href={`data:${fileType};base64,${attachment.split('.')[1]}`}
+                          key={index}
+                          download
+                          className="flex items-center gap-2"
+                        >
+                          <PaperClipIcon className="h-5 w-5" />
+                          <span>Last ned vedlegg</span>
+                        </a>
+                      );
+                    }
                   })}
                 </div>
               )}
             </div>
 
-            <form
-              onSubmit={handleReviewSubmit}
-              className="space-y-4 text-center "
-            >
+            <form onSubmit={handleReviewSubmit} className="space-y-4 text-center ">
               <h2 className="text-2xl">Ny review</h2>
               <div className=" ">
                 <label htmlFor="status" className="block text-sm font-medium">
@@ -245,9 +239,15 @@ const AdminReviewReceiptPage = () => {
                   className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 mx-auto focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md bg-white bg-opacity-20 text-white"
                   required
                 >
-                  <option value="" className="text-black">Velg status</option>
-                  <option value="APPROVED" className="text-black">Godkjent</option>
-                  <option value="DENIED" className="text-black">Ikke godkjent</option>
+                  <option value="" className="text-black">
+                    Velg status
+                  </option>
+                  <option value="APPROVED" className="text-black">
+                    Godkjent
+                  </option>
+                  <option value="DENIED" className="text-black">
+                    Ikke godkjent
+                  </option>
                 </select>
               </div>
               <div className="">
