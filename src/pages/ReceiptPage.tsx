@@ -351,19 +351,28 @@ const ReceiptPage = () => {
         <div className={`${!usedOnlineCard ? 'hidden' : ''} text-white`}>
           <div className="flex justify-center gap-3 flex-col md:gap-10 md:flex-row items-center">
             <div className="flex-col w-[20rem]">
-              <p className="text-left tracking-wide">Kortnummer</p>
-              <input
-                type="text"
-                placeholder={'2345 XXXX XXXX XXXX'}
+              <p className="text-left tracking-wide">Kort benyttet</p>
+              <select
                 className="text-black p-3 rounded w-full"
-                value={formatCardNumber(cardNumber)}
-                maxLength={19}
                 onChange={(e) => {
-                  const raw = e.target.value.replace(/\D/g, '');
-                  setCardNumber(raw);
-                  setFormdata({ ...formdata, card_number: raw });
+                  setFormdata({
+                    ...formdata,
+                    committee_id: e.target.value,
+                  });
                 }}
-              />
+              >
+                <option value="">Ingen</option>
+                {data && data.length
+                  ? data.map((committee: any) => {
+                      return (
+                        <option key={committee.id} value={committee.id}>
+                          {committee.name}
+                        </option>
+                      );
+                    })
+                  : null}
+                  <option key="Interkom" value="Interkom">Interkom</option>
+              </select>
               <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.card_number || ' '}</p>
             </div>
             <div className="flex-col w-[20rem]">
@@ -428,7 +437,7 @@ const ReceiptPage = () => {
           </h1>
           <p className="mx-5">
             Last opp et tydelig bilde/scan av kvitteringen. Husk at kvitteringen må være gyldig for
-            at den skal godkjennes. Er du usikker på om kvitteringen er gyldig?{' '}
+            at den skal godkjennes. Organisasjonsnummer må være <b>synlig</b>. Er du usikker på om kvitteringen er gyldig?{' '}
             <a href="/faq" className="text-green-400 underline">
               Se her
             </a>
