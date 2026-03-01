@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { XMarkIcon } from '@heroicons/react/24/solid';
+import React, { useEffect, useState } from "react";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 
 interface AttachmentViewerProps {
-  type: 'image' | 'pdf';
+  type: "image" | "pdf";
   src: string;
   alt?: string;
   filename?: string; // optional, for PDF fallback download
@@ -17,7 +17,7 @@ const AttachmentViewer = ({ type, src, alt, filename }: AttachmentViewerProps) =
   const handleImageError = () => setImageError(true);
 
   useEffect(() => {
-    if (type === 'pdf') {
+    if (type === "pdf") {
       fetch(src)
         .then((res) => {
           if (!res.ok) setPdfError(true);
@@ -26,18 +26,18 @@ const AttachmentViewer = ({ type, src, alt, filename }: AttachmentViewerProps) =
     }
 
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setOpen(false);
       }
     };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
   return (
     <div className="mb-6">
       {/* Thumbnail / preview */}
-      {type === 'image' ? (
+      {type === "image" ? (
         <div className="flex flex-col items-center">
           {!imageError ? (
             <img
@@ -62,7 +62,7 @@ const AttachmentViewer = ({ type, src, alt, filename }: AttachmentViewerProps) =
           )}
           <button
             onClick={() => setOpen(true)}
-            className={`px-4 py-2 rounded text-white hover:bg-green-800 ${imageError ? 'hidden' : 'bg-[#53a784]'}`}
+            className={`px-4 py-2 rounded text-white hover:bg-green-800 ${imageError ? "hidden" : "bg-[#53a784]"}`}
           >
             Vis i fullskjerm
           </button>
@@ -92,7 +92,7 @@ const AttachmentViewer = ({ type, src, alt, filename }: AttachmentViewerProps) =
           )}
           <button
             onClick={() => setOpen(true)}
-            className={`px-4 py-2 rounded text-white hover:bg-green-800 ${pdfError ? 'hidden' : 'bg-[#53a784]'}`}
+            className={`px-4 py-2 rounded text-white hover:bg-green-800 ${pdfError ? "hidden" : "bg-[#53a784]"}`}
           >
             Vis i fullskjerm
           </button>
@@ -105,7 +105,10 @@ const AttachmentViewer = ({ type, src, alt, filename }: AttachmentViewerProps) =
           className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
           onClick={() => setOpen(false)}
         >
-          <div className="relative flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="relative flex flex-col items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Close button */}
             <button
               onClick={() => setOpen(false)}
@@ -115,7 +118,7 @@ const AttachmentViewer = ({ type, src, alt, filename }: AttachmentViewerProps) =
             </button>
 
             <div className="overflow-auto shadow-lg flex justify-center p-2 max-w-[90vw] max-h-[90vh]">
-              {type === 'image' ? (
+              {type === "image" ? (
                 imageError ? (
                   <div className="bg-[#437c64] p-6 rounded text-white flex flex-col items-center">
                     <p>Bilde kunne ikke lastes</p>
@@ -164,5 +167,6 @@ const AttachmentViewer = ({ type, src, alt, filename }: AttachmentViewerProps) =
     </div>
   );
 };
+
 
 export default AttachmentViewer;

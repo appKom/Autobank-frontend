@@ -1,29 +1,39 @@
-import ProfileCard from '../components/profile/ProfileCard';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { fetchAllUserReceipts } from '../api/userAPI';
-import ReceiptTable from '../components/receipt/ReceiptTable';
-import { Pagination } from '@mui/material';
-import { useEffect } from 'react';
+import ProfileCard from "../components/profile/ProfileCard";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { fetchAllUserReceipts } from "../api/userAPI";
+import ReceiptTable from "../components/receipt/ReceiptTable";
+import { Pagination } from "@mui/material";
+import { useEffect } from "react";
 
 const ProfilePage = () => {
+
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(); // The debounced value
   const [page, setPage] = useState(1);
   const rowsPerPage = 5;
-  const [receiptStatus, setReceiptStatus] = useState<string | null>('NONE');
+  const [receiptStatus, setReceiptStatus] = useState<string | null>("NONE");
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const { data: receiptData, isLoading: receiptDataLoading } = useQuery({
-    queryKey: ['receipts_user', page - 1, rowsPerPage, receiptStatus, debouncedSearchTerm],
+  const {
+    data: receiptData,
+    isLoading: receiptDataLoading,
+  } = useQuery({
+    queryKey: [
+      "receipts_user",
+      page - 1,
+      rowsPerPage,
+      receiptStatus,
+      debouncedSearchTerm,
+    ],
     queryFn: () => fetchAllUserReceipts(page - 1, rowsPerPage, receiptStatus),
   });
 
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearchTerm, receiptStatus]);
+   useEffect(() => {
+      setPage(1);
+    }, [debouncedSearchTerm, receiptStatus]);
 
   return (
     <div className="flex min-h-screen pt-5 mx-5 gap-x-6">

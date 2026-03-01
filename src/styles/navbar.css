@@ -1,5 +1,5 @@
 .active-link::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0.5rem;
   left: 50%;

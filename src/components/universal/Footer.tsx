@@ -1,32 +1,32 @@
-import styles from './footer.module.css';
+import styles from "./footer.module.css";
 
-import React from 'react';
+import React from "react";
 
-import { BsSlack, BsFacebook, BsInstagram, BsGithub } from 'react-icons/bs';
+import { BsSlack, BsFacebook, BsInstagram, BsGithub } from "react-icons/bs";
 
 const Footer = () => {
   const year = new Date().getFullYear();
   const footerLinkSize = 35;
   const footerLinks = [
     {
-      name: 'Slack',
+      name: "Slack",
       icon: <BsSlack size={footerLinkSize} />,
-      link: 'https://onlinentnu.slack.com/',
+      link: "https://onlinentnu.slack.com/",
     },
     {
-      name: 'Facebook',
+      name: "Facebook",
       icon: <BsFacebook size={footerLinkSize} />,
-      link: 'http://facebook.com/LinjeforeningenOnline',
+      link: "http://facebook.com/LinjeforeningenOnline",
     },
     {
-      name: 'Instagram',
+      name: "Instagram",
       icon: <BsInstagram size={footerLinkSize} />,
-      link: 'https://www.instagram.com/online_ntnu/',
+      link: "https://www.instagram.com/online_ntnu/",
     },
     {
-      name: 'Github',
+      name: "Github",
       icon: <BsGithub size={footerLinkSize} />,
-      link: 'https://github.com/appKom',
+      link: "https://github.com/appKom",
     },
   ];
 
@@ -42,7 +42,10 @@ const Footer = () => {
 
       <hr className="mx-auto w-11/12" />
       <div className="flex justify-center">
-        <a href="/faq" className="inline-block pt-10 text-l hover:text-[#282c34] w-auto">
+        <a
+          href="/faq"
+          className="inline-block pt-10 text-l hover:text-[#282c34] w-auto"
+        >
           FAQ
         </a>
       </div>
@@ -64,8 +67,11 @@ const Footer = () => {
       <div className="text-center">
         <div>Feil på siden?</div>
         <div>
-          Ta kontakt med{' '}
-          <a href="mailto:appkom@online.ntnu.no" className="hover:text-[#282c34]">
+          Ta kontakt med{" "}
+          <a
+            href="mailto:appkom@online.ntnu.no"
+            className="hover:text-[#282c34]"
+          >
             Appkom
           </a>
         </div>

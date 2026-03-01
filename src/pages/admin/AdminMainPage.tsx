@@ -1,5 +1,5 @@
-import type React from 'react';
-import { Receipt, FileText } from 'lucide-react';
+import type React from "react"
+import { Receipt, FileText } from "lucide-react"
 
 export default function AdminDashboard() {
   return (
@@ -14,7 +14,7 @@ export default function AdminDashboard() {
         {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">  */}
         <div className="flex justify-center">
           <div className="w-full max-w-sm">
-            {/* Main action cards */}
+          {/* Main action cards */}
             <AdminCard
               title="Kvitteringer"
               description="Godkjenn kvitteringer"
@@ -32,14 +32,14 @@ export default function AdminDashboard() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 interface AdminCardProps {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  href: string;
+  title: string
+  description: string
+  icon: React.ReactNode
+  href: string
 }
 
 function AdminCard({ title, description, icon, href }: AdminCardProps) {
@@ -66,5 +66,6 @@ function AdminCard({ title, description, icon, href }: AdminCardProps) {
         to-black/5 group-hover:to-black/10 transition-all duration-300"
       ></div>
     </a>
-  );
+  )
 }
+

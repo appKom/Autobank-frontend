@@ -1,7 +1,7 @@
-import Navbar from '../components/universal/Navbar';
-import { useState } from 'react';
-import FileUpload from '../components/form/FileUpload';
-import { fileToBase64 } from '../utils/fileutils';
+import Navbar from "../components/universal/Navbar";
+import { useState } from "react";
+import FileUpload from "../components/form/FileUpload";
+import { fileToBase64 } from "../utils/fileutils";
 // import { submitEconomicRequest } from "../api/formsAPI";
 
 interface Application {
@@ -23,12 +23,12 @@ const ApplicationPage = () => {
   };
 
   const [formdata, setFormdata]: [Application, any] = useState({
-    field1: '',
-    field2: '',
-    field3: '',
+    field1: "",
+    field2: "",
+    field3: "",
     amount: 0,
     attachments: [],
-    comments: '',
+    comments: "",
     id: 0,
   });
 
@@ -52,7 +52,7 @@ const ApplicationPage = () => {
     //   application
     // );
 
-    alert('Søknad sendt inn!');
+    alert("Søknad sendt inn!");
     setDisableSubmit(false);
   };
 
@@ -64,12 +64,14 @@ const ApplicationPage = () => {
             Søknadsskjema
           </h1>
           <img
-            src={'../../../resources/images/receiptpageimage.png'}
+            src={"../../../resources/images/receiptpageimage.png"}
             className="w-[130px] hidden md:flex"
           ></img>
         </div>
         <div className="mt-[30px]">
-          <h1 className="text-3xl text-white text-center self-center font-thin">Beskrivelse</h1>
+          <h1 className="text-3xl text-white text-center self-center font-thin">
+            Beskrivelse
+          </h1>
         </div>
         <div className="flex-col mt-[20px]">
           <p className="text-white w-full text-left text-l mb-[5px]">
@@ -79,7 +81,9 @@ const ApplicationPage = () => {
             name=""
             id=""
             className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
-            onChange={(e) => setFormdata({ ...formdata, field1: e.target.value })}
+            onChange={(e) =>
+              setFormdata({ ...formdata, field1: e.target.value })
+            }
           ></textarea>
         </div>
         <div className="flex-col mt-[20px]">
@@ -90,16 +94,22 @@ const ApplicationPage = () => {
             name=""
             id=""
             className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
-            onChange={(e) => setFormdata({ ...formdata, field2: e.target.value })}
+            onChange={(e) =>
+              setFormdata({ ...formdata, field2: e.target.value })
+            }
           ></textarea>
         </div>
         <div className="flex-col mt-[20px]">
-          <p className="text-white w-full text-left text-l mb-[5px]">Aktivitetsplan</p>
+          <p className="text-white w-full text-left text-l mb-[5px]">
+            Aktivitetsplan
+          </p>
           <textarea
             name=""
             id=""
             className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
-            onChange={(e) => setFormdata({ ...formdata, field3: e.target.value })}
+            onChange={(e) =>
+              setFormdata({ ...formdata, field3: e.target.value })
+            }
           ></textarea>
         </div>
 
@@ -107,9 +117,11 @@ const ApplicationPage = () => {
           <div className="flex-col w-full">
             <p className="text-left tracking-wide">Beløp</p>
             <input
-              placeholder={'530'}
+              placeholder={"530"}
               className="text-black p-3 rounded w-full"
-              onChange={(e) => setFormdata({ ...formdata, amount: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setFormdata({ ...formdata, amount: parseInt(e.target.value) })
+              }
             ></input>
           </div>
         </div>
@@ -126,12 +138,16 @@ const ApplicationPage = () => {
         </div>
 
         <div className="flex-col mt-[20px]">
-          <p className="text-white w-full text-left text-l mb-[5px]">Kommentarer</p>
+          <p className="text-white w-full text-left text-l mb-[5px]">
+            Kommentarer
+          </p>
           <textarea
             name=""
             id=""
             className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
-            onChange={(e) => setFormdata({ ...formdata, comments: e.target.value })}
+            onChange={(e) =>
+              setFormdata({ ...formdata, comments: e.target.value })
+            }
           ></textarea>
         </div>
 

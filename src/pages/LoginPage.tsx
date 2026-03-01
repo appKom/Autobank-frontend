@@ -1,4 +1,5 @@
-import { useAuth } from 'react-oidc-context';
+import { useAuth } from "react-oidc-context";
+
 
 const LoginPage = () => {
   const auth = useAuth();
@@ -7,8 +8,11 @@ const LoginPage = () => {
   return (
     <div>
       <h2 className="mt-[100px] font-bold text-xl text-white">
-        Vennligst{' '}
-        <span className="cursor-pointer text-blue-200 underline" onClick={() => signinRedirect()}>
+        Vennligst{" "}
+        <span
+          className="cursor-pointer text-blue-200 underline"
+          onClick={() => signinRedirect()}
+        >
           logg inn
         </span>
       </h2>

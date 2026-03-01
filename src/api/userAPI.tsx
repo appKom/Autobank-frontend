@@ -1,4 +1,4 @@
-import { sendRequest, GET, POST } from './helper';
+import { sendRequest, GET, POST } from "./helper";
 
 export interface Receipt_Info {
   receiptId: string;
@@ -43,15 +43,10 @@ export interface AllReceiptsResponse {
   total: number;
 }
 
-export const fetchAllUserReceipts = async (
-  from: Number,
-  count: Number,
-  status: string | null
+
+export const fetchAllUserReceipts = async (from: Number, count: Number, status: string | null,
 ): Promise<AllReceiptsResponse> => {
-  return sendRequest<undefined, AllReceiptsResponse>(
-    `/receipt/getall?from=${from}&count=${count}${status ? `&status=${status}` : ''}`,
-    GET
-  );
+  return sendRequest<undefined, AllReceiptsResponse>(`/receipt/getall?from=${from}&count=${count}${status ? `&status=${status}` : ''}`, GET);
 };
 
 export const fetchCompleteUserReceipt = async (receiptId: string): Promise<CompleteReceipt> => {
@@ -60,4 +55,4 @@ export const fetchCompleteUserReceipt = async (receiptId: string): Promise<Compl
 
 export const postReceiptReview = async (receiptreview: ReceiptReview): Promise<void> => {
   return sendRequest<ReceiptReview, void>('/admin/receipt/review', POST, receiptreview);
-};
+}; 
