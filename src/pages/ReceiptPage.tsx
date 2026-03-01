@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
-import { fetchCommittees } from "../api/baseAPI";
-import FileUpload from "../components/form/FileUpload";
-import { fileToBase64 } from "../utils/fileutils";
+import { fetchCommittees } from '../api/baseAPI';
+import FileUpload from '../components/form/FileUpload';
+import { fileToBase64 } from '../utils/fileutils';
 
-import { submitReceipt } from "../api/formsAPI";
+import { submitReceipt } from '../api/formsAPI';
 
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "react-oidc-context";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from 'react-oidc-context';
 
 interface Committee {
   id: string;
@@ -49,18 +49,18 @@ const ReceiptPage = () => {
 
   const [usedOnlineCard, setUsedOnlineCard] = useState(false);
   const [disableSubmit, setDisableSubmit] = useState(false);
-  const [amountInput, setAmountInput] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
+  const [amountInput, setAmountInput] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
 
   const [attachments, setAttachments] = useState<File[]>([]);
   const allowedTypes = [
-    "application/pdf",
-    "image/png",
-    "image/jpeg",
-    "image/jpg",
-    "image/heic",
-    "image/heif",
+    'application/pdf',
+    'image/png',
+    'image/jpeg',
+    'image/jpg',
+    'image/heic',
+    'image/heif',
   ];
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB per file
@@ -69,21 +69,20 @@ const ReceiptPage = () => {
   const { user } = auth;
 
   const { data, isError } = useQuery({
-    queryKey: ["committees"],
+    queryKey: ['committees'],
     queryFn: () => fetchCommittees(),
   });
 
   const onFileChange = async (files: File[]) => {
-    const validExtensions = ["pdf", "png", "jpg", "jpeg", "heic", "heif"];
+    const validExtensions = ['pdf', 'png', 'jpg', 'jpeg', 'heic', 'heif'];
 
     const validFiles: File[] = [];
     const invalidTypeFiles: File[] = [];
 
     files.forEach((file) => {
-      const extension = file.name.split(".").pop()?.toLowerCase();
+      const extension = file.name.split('.').pop()?.toLowerCase();
       const isValidType =
-        allowedTypes.includes(file.type) ||
-        (extension && validExtensions.includes(extension));
+        allowedTypes.includes(file.type) || (extension && validExtensions.includes(extension));
 
       if (!isValidType) {
         invalidTypeFiles.push(file);
@@ -93,9 +92,7 @@ const ReceiptPage = () => {
     });
 
     if (invalidTypeFiles.length > 0) {
-      alert(
-        "Bare PDF, JPG, PNG, JPEG eller HEIC filer er tillatt. Ugyldige filer ble ignorert.",
-      );
+      alert('Bare PDF, JPG, PNG, JPEG eller HEIC filer er tillatt. Ugyldige filer ble ignorert.');
     }
 
     setAttachments(validFiles);
@@ -103,78 +100,78 @@ const ReceiptPage = () => {
 
   const [formdata, setFormdata]: [FormData, any] = useState({
     amount: 0,
-    committee_id: "",
-    name: "",
-    description: "",
+    committee_id: '',
+    name: '',
+    description: '',
     id: 0,
-    card_number: "",
-    account_number: "",
+    card_number: '',
+    account_number: '',
   });
 
   const [errors, setErrors] = useState({
-    amount: "",
-    account_number: "",
-    card_number: "",
-    name: "",
-    committee_id: "",
-    attachments: "",
+    amount: '',
+    account_number: '',
+    card_number: '',
+    name: '',
+    committee_id: '',
+    attachments: '',
   });
 
   const validateForm = () => {
     const newErrors: typeof errors = {
-      amount: "",
-      account_number: "",
-      card_number: "",
-      name: "",
-      committee_id: "",
-      attachments: "",
+      amount: '',
+      account_number: '',
+      card_number: '',
+      name: '',
+      committee_id: '',
+      attachments: '',
     };
 
     if (!usedOnlineCard) {
-      if (!/^\d{11}$/.test(formdata.account_number || "")) {
-        newErrors.account_number = "Kontonummer må være 11 sifre";
+      if (!/^\d{11}$/.test(formdata.account_number || '')) {
+        newErrors.account_number = 'Kontonummer må være 11 sifre';
       }
     }
 
     if (usedOnlineCard) {
-      const cardNumber = formdata.card_number || "";
+      const cardNumber = formdata.card_number || '';
       if (!/^\d{16}$/.test(cardNumber)) {
-        newErrors.card_number = "Kortnummer må være 16 sifre";
+        newErrors.card_number = 'Kortnummer må være 16 sifre';
       }
     }
 
-    if (formdata.name.trim() === "") {
-      newErrors.name = "Vennligst skriv anledning";
+    if (formdata.name.trim() === '') {
+      newErrors.name = 'Vennligst skriv anledning';
     }
 
     if (!formdata.committee_id) {
-      newErrors.committee_id = "Velg en ansvarlig enhet";
+      newErrors.committee_id = 'Velg en ansvarlig enhet';
     }
 
     if (attachments.length === 0) {
-      newErrors.attachments = "Last opp minst én kvittering/vedlegg";
+      newErrors.attachments = 'Last opp minst én kvittering/vedlegg';
     }
 
     setErrors(newErrors);
 
-    return Object.values(newErrors).every((e) => e === "");
+    return Object.values(newErrors).every((e) => e === '');
   };
 
   const formatAccountNumber = (value: string) => {
-    const digits = value.replace(/\D/g, "");
+    const digits = value.replace(/\D/g, '');
     const parts: string[] = [];
 
     if (digits.length > 0) parts.push(digits.substring(0, 4));
     if (digits.length > 4) parts.push(digits.substring(4, 6));
     if (digits.length > 6) parts.push(digits.substring(6, 11));
 
-    return parts.join(" ");
+    return parts.join(' ');
   };
 
   const formatCardNumber = (value: string) => {
     return value
-      .replace(/\D/g, "")
-      .replace(/(.{4})/g, "$1 ")
+      .replace(/\D/g, '')
+      .replace(/(.{4})/g, '$1 ')
       .trim();
   };
 
@@ -189,28 +186,28 @@ const ReceiptPage = () => {
     try {
       const paymentInfo: PaymentInformation = {
         usedOnlineCard: usedOnlineCard,
-        accountnumber: usedOnlineCard ? "" : formdata.account_number,
-        cardnumber: usedOnlineCard ? formdata.card_number : "",
+        accountnumber: usedOnlineCard ? '' : formdata.account_number,
+        cardnumber: usedOnlineCard ? formdata.card_number : '',
       };
 
       const convertedAttachments = await Promise.all(
         [...attachments].map(async (file) => ({
           name: file.name,
           base64: await fileToBase64(file),
-        })),
+        }))
       );
 
       // Check file sizes after conversion (base64 is ~33% larger than binary)
       const maxBase64Size = MAX_FILE_SIZE * 1.34; // Account for base64 overhead
       const tooLargeFiles = convertedAttachments.filter(
-        (attachment) => attachment.base64.length > maxBase64Size,
+        (attachment) => attachment.base64.length > maxBase64Size
       );
 
       if (tooLargeFiles.length > 0) {
         setDisableSubmit(false);
         alert(
-          "Fil for stor. Prøv å laste opp en mindre fil/bilde. Maksimal filstørrelse er 5MB. Følgende filer er for store: " +
-            tooLargeFiles.map((f) => f.name).join(", "),
+          'Fil for stor. Prøv å laste opp en mindre fil/bilde. Maksimal filstørrelse er 5MB. Følgende filer er for store: ' +
+            tooLargeFiles.map((f) => f.name).join(', ')
         );
         return;
       }
@@ -222,13 +219,13 @@ const ReceiptPage = () => {
       };
 
       await submitReceipt(body);
-      alert("Kvittering sendt inn!");
-      navigate("/?receiptsubmittedsuccess=1");
+      alert('Kvittering sendt inn!');
+      navigate('/?receiptsubmittedsuccess=1');
     } catch (e: any) {
-      if (e.message?.includes("HEIC")) {
+      if (e.message?.includes('HEIC')) {
         alert(e.message);
       } else {
-        alert("Noe gikk galt, prøv igjen senere");
+        alert('Noe gikk galt, prøv igjen senere');
       }
     }
 
@@ -243,7 +240,7 @@ const ReceiptPage = () => {
             Kvitteringsskjema
           </h1>
           <img
-            src={"../../../resources/images/receiptpageimage.png"}
+            src={'../../../resources/images/receiptpageimage.png'}
             className="w-[130px] hidden md:flex "
           ></img>
         </div>
@@ -278,58 +275,52 @@ const ReceiptPage = () => {
             <label>Onlines bankkort</label>
           </div>
         </div>
-        <div className={`${usedOnlineCard ? "hidden" : ""} text-white `}>
+        <div className={`${usedOnlineCard ? 'hidden' : ''} text-white `}>
           <div className="flex justify-center gap-3 flex-col md:gap-10 md:flex-row items-center">
             <div className="flex-col w-[20rem]">
               <p className="text-left tracking-wide">Kontonummer</p>
               <input
                 type="text"
-                placeholder={"2345 XX XXXX"}
+                placeholder={'2345 XX XXXX'}
                 className="text-black p-3 rounded w-full"
                 value={formatAccountNumber(accountNumber)}
                 maxLength={13}
                 onChange={(e) => {
-                  const raw = e.target.value.replace(/\D/g, "");
+                  const raw = e.target.value.replace(/\D/g, '');
                   setAccountNumber(raw);
                   setFormdata({ ...formdata, account_number: raw });
                 }}
               ></input>
-              <p className="text-red-500 text-sm min-h-[1.25rem]">
-                {errors.account_number || " "}
-              </p>
+              <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.account_number || ' '}</p>
             </div>
             <div className="flex-col w-[20rem]">
               <p className="text-left tracking-wide">Beløp</p>
               <input
                 type="text"
-                placeholder={"530"}
+                placeholder={'530'}
                 className="text-black p-3 rounded w-full"
                 onChange={(e) => {
-                  const raw = e.target.value.replace(/\D/g, "");
+                  const raw = e.target.value.replace(/\D/g, '');
                   const value = raw.slice(0, 6); // Limit to 6 characters
                   console.log(value);
                   setAmountInput(value);
                 }}
                 value={amountInput}
               />
-              <p className="text-red-500 text-sm min-h-[1.25rem]">
-                {errors.amount || " "}
-              </p>
+              <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.amount || ' '}</p>
             </div>
           </div>
           <div className="flex justify-center mt-[10px] gap-3 flex-col md:gap-10 md:flex-row items-center">
             <div className="flex-col w-[20rem]">
               <p className="text-left tracking-wide">Anledning</p>
               <input
-                placeholder={"Arbeidskveld"}
+                placeholder={'Arbeidskveld'}
                 className="text-black p-3 rounded w-full"
                 onChange={(e) => {
                   setFormdata({ ...formdata, name: e.target.value });
                 }}
               ></input>
-              <p className="text-red-500 text-sm min-h-[1.25rem]">
-                {errors.name || " "}
-              </p>
+              <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.name || ' '}</p>
             </div>
             <div className="flex-col w-[20rem]">
               <p className="text-left tracking-wide">Ansvarlig enhet</p>
@@ -353,64 +344,56 @@ const ReceiptPage = () => {
                     })
                   : null}
               </select>
-              <p className="text-red-500 text-sm min-h-[1.25rem]">
-                {errors.committee_id || " "}
-              </p>
+              <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.committee_id || ' '}</p>
             </div>
           </div>
         </div>
-        <div className={`${!usedOnlineCard ? "hidden" : ""} text-white`}>
+        <div className={`${!usedOnlineCard ? 'hidden' : ''} text-white`}>
           <div className="flex justify-center gap-3 flex-col md:gap-10 md:flex-row items-center">
             <div className="flex-col w-[20rem]">
               <p className="text-left tracking-wide">Kortnummer</p>
               <input
                 type="text"
-                placeholder={"2345 XXXX XXXX XXXX"}
+                placeholder={'2345 XXXX XXXX XXXX'}
                 className="text-black p-3 rounded w-full"
                 value={formatCardNumber(cardNumber)}
                 maxLength={19}
                 onChange={(e) => {
-                  const raw = e.target.value.replace(/\D/g, "");
+                  const raw = e.target.value.replace(/\D/g, '');
                   setCardNumber(raw);
                   setFormdata({ ...formdata, card_number: raw });
                 }}
               />
-              <p className="text-red-500 text-sm min-h-[1.25rem]">
-                {errors.card_number || " "}
-              </p>
+              <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.card_number || ' '}</p>
             </div>
             <div className="flex-col w-[20rem]">
               <p className="text-left tracking-wide">Beløp</p>
               <input
                 type="text"
-                placeholder={"530"}
+                placeholder={'530'}
                 className="text-black p-3 rounded w-full"
                 onChange={(e) => {
-                  const raw = e.target.value.replace(/\D/g, "");
+                  const raw = e.target.value.replace(/\D/g, '');
                   const value = raw.slice(0, 6); // Limit to 6 characters
                   console.log(value);
                   setAmountInput(value);
                 }}
                 value={amountInput}
               />
-              <p className="text-red-500 text-sm min-h-[1.25rem]">
-                {errors.amount || " "}
-              </p>
+              <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.amount || ' '}</p>
             </div>
           </div>
           <div className="flex justify-center mt-[10px] gap-3 flex-col md:gap-10 md:flex-row items-center">
             <div className="flex-col w-[20rem]">
               <p className="text-left tracking-wide">Anledning</p>
               <input
-                placeholder={"Arbeidskveld"}
+                placeholder={'Arbeidskveld'}
                 className="text-black p-3 rounded w-full"
                 onChange={(e) => {
                   setFormdata({ ...formdata, name: e.target.value });
                 }}
               ></input>
-              <p className="text-red-500 text-sm min-h-[1.25rem]">
-                {errors.name || " "}
-              </p>
+              <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.name || ' '}</p>
             </div>
             <div className="flex-col w-[20rem]">
               <p className="text-left tracking-wide">Ansvarlig enhet</p>
@@ -435,9 +418,7 @@ const ReceiptPage = () => {
                     })
                   : null}
               </select>
-              <p className="text-red-500 text-sm min-h-[1.25rem]">
-                {errors.committee_id || " "}
-              </p>
+              <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.committee_id || ' '}</p>
             </div>
           </div>
         </div>
@@ -446,9 +427,8 @@ const ReceiptPage = () => {
             Vedlegg/Kvitteringer
           </h1>
           <p className="mx-5">
-            Last opp et tydelig bilde/scan av kvitteringen. Husk at kvitteringen
-            må være gyldig for at den skal godkjennes. Er du usikker på om
-            kvitteringen er gyldig?{" "}
+            Last opp et tydelig bilde/scan av kvitteringen. Husk at kvitteringen må være gyldig for
+            at den skal godkjennes. Er du usikker på om kvitteringen er gyldig?{' '}
             <a href="/faq" className="text-green-400 underline">
               Se her
             </a>
@@ -457,14 +437,10 @@ const ReceiptPage = () => {
         <div className="flex-col mx-5">
           <p className="text-white w-full text-left text-l mb-[5px]">Vedlegg</p>
           <FileUpload files={attachments} onFileChange={onFileChange} />
-          <p className="text-red-500 text-sm min-h-[1.25rem]">
-            {errors.attachments || " "}
-          </p>
+          <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.attachments || ' '}</p>
         </div>
         <div className="flex-col mt-[20px] mx-5">
-          <p className="text-white w-full text-left text-l mb-[5px]">
-            Kommentarer
-          </p>
+          <p className="text-white w-full text-left text-l mb-[5px]">Kommentarer</p>
           <textarea
             name=""
             id=""

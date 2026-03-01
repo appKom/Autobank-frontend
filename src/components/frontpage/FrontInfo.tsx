@@ -1,5 +1,5 @@
-import topwave from "../../resources/frontpage/topwave.svg";
-import bottomwave from "../../resources/frontpage/wave.svg";
+import topwave from '../../resources/frontpage/topwave.svg';
+import bottomwave from '../../resources/frontpage/wave.svg';
 
 export default function FrontInfo() {
   return (
@@ -8,9 +8,7 @@ export default function FrontInfo() {
       <div className="absolute inset-0 flex items-center justify-center text-center text-white font-bold text-4xl px-4">
         <div>
           <span className="block md:text-5xl">Velkommen til Autobank!</span>
-          <span className="block text-2xl mt-4">
-            Her kan du legge inn kvitteringer for utlegg
-          </span>
+          <span className="block text-2xl mt-4">Her kan du legge inn kvitteringer for utlegg</span>
         </div>
       </div>
 

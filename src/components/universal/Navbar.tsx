@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import MenuIcon from "@mui/icons-material/Menu";
-import LogOutIcon from "../../icons/LogOutIcon";
-import Button from "./Button";
-import {
-  Bars3Icon,
-  XMarkIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/outline";
-import { checkUserResponse } from "../../pages/Authcallback";
-import useAutobankStore from "../../store/autobankstore";
-import { useAuth } from "react-oidc-context";
-import "../../styles/navbar.css";
+import MenuIcon from '@mui/icons-material/Menu';
+import LogOutIcon from '../../icons/LogOutIcon';
+import Button from './Button';
+import { Bars3Icon, XMarkIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { checkUserResponse } from '../../pages/Authcallback';
+import useAutobankStore from '../../store/autobankstore';
+import { useAuth } from 'react-oidc-context';
+import '../../styles/navbar.css';
 
 type NavdropdownProps = {
   user?: checkUserResponse | null;
@@ -23,9 +19,9 @@ type NavdropdownProps = {
 };
 
 const routes = [
-  { name: "Kvittering", path: `${import.meta.env.BASE_URL}kvittering` },
+  { name: 'Kvittering', path: `${import.meta.env.BASE_URL}kvittering` },
   // { name: "Søknad", path: `${import.meta.env.BASE_URL}soknad` },
-  { name: "Min side", path: `${import.meta.env.BASE_URL}minside` },
+  { name: 'Min side', path: `${import.meta.env.BASE_URL}minside` },
 ];
 
 const NavDropdown = (props: NavdropdownProps) => {
@@ -33,7 +29,7 @@ const NavDropdown = (props: NavdropdownProps) => {
   return (
     <div
       className={`lg:hidden absolute top-12 right-0 z-10 w-48 py-2 mt-2 text-[18px] text-white border border-none cursor-pointer ${
-        props.isAuthenticated ? "bg-[#2e6e53] rounded-lg shadow-xl" : "bg-white"
+        props.isAuthenticated ? 'bg-[#2e6e53] rounded-lg shadow-xl' : 'bg-white'
       }`}
     >
       {props.isAuthenticated ? (
@@ -41,9 +37,7 @@ const NavDropdown = (props: NavdropdownProps) => {
           <div className="">
             <button className="hover:bg-green-900 flex items-center w-full rounded-[10px] justify-center relativ p-4  h-[50px] bg-[#2e6e53] justify-self-end relative z-20 ">
               <img
-                src={`${
-                  import.meta.env.BASE_URL
-                }resources/logo/online-logo-white.png`}
+                src={`${import.meta.env.BASE_URL}resources/logo/online-logo-white.png`}
                 className="h-5 mr-2"
               ></img>
               <p>{props.name}</p>
@@ -65,7 +59,7 @@ const NavDropdown = (props: NavdropdownProps) => {
               className="text-white text-[20px] p-3 rounded-[10px] hover:bg-green-900 cursor-pointer"
               key="admin"
             >
-              <a href={"/admin"}>Admin</a>
+              <a href={'/admin'}>Admin</a>
             </div>
           )}
           {routes.map((route) => (
@@ -83,10 +77,7 @@ const NavDropdown = (props: NavdropdownProps) => {
             onClick={() => props.login()}
             className="flex items-center w-full justify-center relativ p-4 h-[50px] justify-self-end relative z-20 text-black"
           >
-            <img
-              src="resources/logo/online-logo-blue.png"
-              className="h-5 mr-2"
-            ></img>
+            <img src="resources/logo/online-logo-blue.png" className="h-5 mr-2"></img>
             <p>Logg inn</p>
           </button>
         </div>
@@ -123,31 +114,22 @@ const Navbar = () => {
         <div className="flex items-center justify-between p-3 w-full fixed z-50 bg-[#2e6e53]">
           <a className="flex items-center" href="/">
             <img
-              src={`${
-                import.meta.env.BASE_URL
-              }resources/logo/online-logo-white.png`}
+              src={`${import.meta.env.BASE_URL}resources/logo/online-logo-white.png`}
               className="h-12 w-auto cursor-pointer"
             ></img>
-            <p className="text-[25px] ml-3 font-semibold text-white ">
-              Autobank
-            </p>
+            <p className="text-[25px] ml-3 font-semibold text-white ">Autobank</p>
           </a>
 
           {/* Navbar small-medium width */}
-          <button
-            onClick={toggleNavbarDropdown}
-            className="flex justify-end abolute lg:hidden"
-          >
+          <button onClick={toggleNavbarDropdown} className="flex justify-end abolute lg:hidden">
             <Bars3Icon
               className={`cursor-pointer text-white h-9 justify-self-end absolute top-3 right-3 transition-transform transform ${
-                showNavDropdown ? "rotate-45 opacity-0" : "rotate-0 opacity-100"
+                showNavDropdown ? 'rotate-45 opacity-0' : 'rotate-0 opacity-100'
               }`}
             />
             <XMarkIcon
               className={`cursor-pointer text-white h-9 justify-self-end absolute top-3 right-3 transition-transform transform ${
-                showNavDropdown
-                  ? "rotate-0 opacity-100"
-                  : "rotate-45 opacity-0 hidden"
+                showNavDropdown ? 'rotate-0 opacity-100' : 'rotate-45 opacity-0 hidden'
               }`}
             />
           </button>
@@ -168,19 +150,17 @@ const Navbar = () => {
               <div className="flex justify-self-end md:static right-[20px] gap-10 items-center">
                 <div
                   className={
-                    (showNavDropdown ? "" : "hidden") +
-                    " border-[1px] border-green-800 flex rounded-[10px] flex-col absolute top-[50px] left-[-70px] bg-[#2e6e53] md:border-0 md:flex-row md:flex md:column md:static md:bg-inherit"
+                    (showNavDropdown ? '' : 'hidden') +
+                    ' border-[1px] border-green-800 flex rounded-[10px] flex-col absolute top-[50px] left-[-70px] bg-[#2e6e53] md:border-0 md:flex-row md:flex md:column md:static md:bg-inherit'
                   }
                 >
                   {userInfo?.isadmin && (
                     <a
                       className={`relative text-white text-[20px] p-3  md:ml-4 rounded-[10px] hover:bg-[#1A4B36] cursor-pointer ${
-                        location === `${import.meta.env.BASE_URL}admin`
-                          ? "active-link"
-                          : ""
+                        location === `${import.meta.env.BASE_URL}admin` ? 'active-link' : ''
                       }`}
-                      href={"/admin"}
-                      key={"admin"}
+                      href={'/admin'}
+                      key={'admin'}
                     >
                       Admin
                     </a>
@@ -189,7 +169,7 @@ const Navbar = () => {
                   {routes.map((route) => (
                     <a
                       className={`relative text-white text-[20px] p-3 md:ml-4 rounded-[10px] hover:bg-[#1A4B36] cursor-pointer ${
-                        location === route.path ? "active-link" : ""
+                        location === route.path ? 'active-link' : ''
                       }`}
                       href={route.path}
                       key={route.name}
@@ -211,9 +191,7 @@ const Navbar = () => {
               <div>
                 <button className="flex rounded-[15px] items-center justify-center relativ p-4  h-[50px] bg-white justify-self-end relative z-20">
                   <img
-                    src={`${
-                      import.meta.env.BASE_URL
-                    }resources/logo/online-logo-blue.png`}
+                    src={`${import.meta.env.BASE_URL}resources/logo/online-logo-blue.png`}
                     className="h-5 mr-2"
                   ></img>
                   <p>{user?.profile.name}</p>
@@ -226,10 +204,7 @@ const Navbar = () => {
                 onClick={() => signinRedirect()}
                 className="flex rounded-[15px] items-center justify-center relativ p-4  h-[50px] bg-white justify-self-end relative z-20"
               >
-                <img
-                  src="resources/logo/online-logo-blue.png"
-                  className="h-5 mr-2"
-                ></img>
+                <img src="resources/logo/online-logo-blue.png" className="h-5 mr-2"></img>
                 <a>Logg inn</a>
               </button>
             </div>

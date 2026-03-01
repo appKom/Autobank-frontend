@@ -1,4 +1,4 @@
-import { sendRequest, POST } from "./helper";
+import { sendRequest, POST } from './helper';
 
 interface Receipt {
   amount: number;
@@ -24,7 +24,7 @@ interface Application {
 }
 
 export const submitReceipt = async (receiptbody: ReceiptRequestBody) => {
-  return sendRequest<ReceiptRequestBody, void>("/receipt/create", POST, receiptbody);
+  return sendRequest<ReceiptRequestBody, void>('/receipt/create', POST, receiptbody);
 };
 
 export const submitEconomicRequest = async (application: Application) => {

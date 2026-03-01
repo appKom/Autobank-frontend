@@ -1,15 +1,13 @@
-import React from "react";
-import profilePicture from "../../resources/profile/profile_pic.png";
-import mailIcon from "../../icons/mail_icon.png";
-import groupIcon from "../../icons/group_icon.png";
-import { fetchCommittees, fetchUserComittees } from "../../api/baseAPI";
-import { useQuery } from "@tanstack/react-query";
+import React from 'react';
+import profilePicture from '../../resources/profile/profile_pic.png';
+import mailIcon from '../../icons/mail_icon.png';
+import groupIcon from '../../icons/group_icon.png';
+import { fetchCommittees, fetchUserComittees } from '../../api/baseAPI';
+import { useQuery } from '@tanstack/react-query';
 
 const ProfileCard = () => {
-
-
-  const { data , isError } = useQuery({
-    queryKey: ["committees"],
+  const { data, isError } = useQuery({
+    queryKey: ['committees'],
     queryFn: () => fetchUserComittees(),
   });
 
@@ -23,19 +21,22 @@ const ProfileCard = () => {
         <img src={profilePicture} alt="" />
         <h2 className="text-2xl mb-2 mt-5">{data && data.name}</h2>
         <div className="flow-root my-3">
-          <img src={mailIcon} alt="" className="float-left size-5 mr-2"/>
+          <img src={mailIcon} alt="" className="float-left size-5 mr-2" />
           <p className="text-sm float-right">{data && data.email}</p>
         </div>
         <div className="flow-root mb-2">
-          <img src={groupIcon} alt="" className="float-left size-5 mr-2"/>
-          {data && data.committees.length ? data.committees.map((committee: any, index: number) => {
-              const capitalizedName = committee.charAt(0).toUpperCase() + committee.slice(1);
-              return (
+          <img src={groupIcon} alt="" className="float-left size-5 mr-2" />
+          {data && data.committees.length
+            ? data.committees.map((committee: any, index: number) => {
+                const capitalizedName = committee.charAt(0).toUpperCase() + committee.slice(1);
+                return (
                   <span key={index}>
-                      {capitalizedName}{index < data.committees.length - 1 && ", "}
+                    {capitalizedName}
+                    {index < data.committees.length - 1 && ', '}
                   </span>
-              );
-          }) : null}
+                );
+              })
+            : null}
         </div>
       </div>
     </div>

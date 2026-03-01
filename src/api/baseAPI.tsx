@@ -1,4 +1,4 @@
-import { sendRequest, GET } from "./helper";
+import { sendRequest, GET } from './helper';
 
 export interface Committee {
   id: string;
@@ -12,9 +12,9 @@ export interface UserCommittees {
 }
 
 export const fetchCommittees = async () => {
-  return sendRequest<undefined, Committee[]>("/committee/all", GET);
+  return sendRequest<undefined, Committee[]>('/committee/all', GET);
 };
 
 export const fetchUserComittees = async () => {
-  return sendRequest<undefined, UserCommittees>("/committee/user", GET);
+  return sendRequest<undefined, UserCommittees>('/committee/user', GET);
 };
