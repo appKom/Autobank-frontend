@@ -8,6 +8,12 @@ import { fileToBase64 } from '../utils/fileutils';
 import { submitReceipt } from '../api/formsAPI';
 
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from 'react-oidc-context';
+
+interface Committee {
+  id: string;
+  name: string;
+}
 
 interface Receipt {
   amount: number;
@@ -58,6 +64,9 @@ const ReceiptPage = () => {
   ];
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB per file
+
+  const auth = useAuth();
+  const { user } = auth;
 
   const { data, isError } = useQuery({
     queryKey: ['committees'],
@@ -342,28 +351,19 @@ const ReceiptPage = () => {
         <div className={`${!usedOnlineCard ? 'hidden' : ''} text-white`}>
           <div className="flex justify-center gap-3 flex-col md:gap-10 md:flex-row items-center">
             <div className="flex-col w-[20rem]">
-              <p className="text-left tracking-wide">Kort benyttet</p>
-              <select
+              <p className="text-left tracking-wide">Kortnummer</p>
+              <input
+                type="text"
+                placeholder={'2345 XXXX XXXX XXXX'}
                 className="text-black p-3 rounded w-full"
+                value={formatCardNumber(cardNumber)}
+                maxLength={19}
                 onChange={(e) => {
-                  setFormdata({
-                    ...formdata,
-                    committee_id: e.target.value,
-                  });
+                  const raw = e.target.value.replace(/\D/g, '');
+                  setCardNumber(raw);
+                  setFormdata({ ...formdata, card_number: raw });
                 }}
-              >
-                <option value="">Ingen</option>
-                {data && data.length
-                  ? data.map((committee: any) => {
-                      return (
-                        <option key={committee.id} value={committee.id}>
-                          {committee.name}
-                        </option>
-                      );
-                    })
-                  : null}
-                  <option key="Interkom" value="Interkom">Interkom</option>
-              </select>
+              />
               <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.card_number || ' '}</p>
             </div>
             <div className="flex-col w-[20rem]">
@@ -428,7 +428,7 @@ const ReceiptPage = () => {
           </h1>
           <p className="mx-5">
             Last opp et tydelig bilde/scan av kvitteringen. Husk at kvitteringen må være gyldig for
-            at den skal godkjennes. Organisasjonsnummer må være synlig. Er du usikker på om kvitteringen er gyldig?{' '}
+            at den skal godkjennes. Er du usikker på om kvitteringen er gyldig?{' '}
             <a href="/faq" className="text-green-400 underline">
               Se her
             </a>
