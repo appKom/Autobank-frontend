@@ -133,13 +133,6 @@ const ReceiptPage = () => {
       }
     }
 
-    if (usedOnlineCard) {
-      const cardNumber = formdata.card_number || '';
-      if (!/^\d{16}$/.test(cardNumber)) {
-        newErrors.card_number = 'Kortnummer må være 16 sifre';
-      }
-    }
-
     if (formdata.name.trim() === '') {
       newErrors.name = 'Vennligst skriv anledning';
     }
