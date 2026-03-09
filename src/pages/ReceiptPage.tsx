@@ -178,7 +178,8 @@ const ReceiptPage = () => {
   const submitform = async () => {
     if (!validateForm()) return;
 
-    const numericAmount = parseFloat(amountInput);
+    const normalizedAmount = amountInput.replace(',', '.');
+    const numericAmount = parseFloat(normalizedAmount);
     const updatedFormData = { ...formdata, amount: numericAmount };
 
     setDisableSubmit(true);
@@ -300,8 +301,11 @@ const ReceiptPage = () => {
                 placeholder={'530'}
                 className="text-black p-3 rounded w-full"
                 onChange={(e) => {
-                  const raw = e.target.value.replace(/\D/g, '');
-                  const value = raw.slice(0, 6); // Limit to 6 characters
+                  let value = e.target.value
+                    .replace(/[^0-9.,]/g, '')        // allow digits, dot, comma
+                    .replace(/([.,].*)[.,]/g, '$1'); // only one decimal separator
+
+                  value = value.slice(0, 6);         // Limit to 6 characters
                   console.log(value);
                   setAmountInput(value);
                 }}
@@ -382,8 +386,11 @@ const ReceiptPage = () => {
                 placeholder={'530'}
                 className="text-black p-3 rounded w-full"
                 onChange={(e) => {
-                  const raw = e.target.value.replace(/\D/g, '');
-                  const value = raw.slice(0, 6); // Limit to 6 characters
+                  let value = e.target.value
+                    .replace(/[^0-9.,]/g, '')        // allow digits, dot, comma
+                    .replace(/([.,].*)[.,]/g, '$1'); 
+                    
+                  value = value.slice(0, 6); // Limit to 6 characters
                   console.log(value);
                   setAmountInput(value);
                 }}
