@@ -28,7 +28,7 @@ interface FormData {
   committee_id: string;
   name: string;
   description: string;
-  card_number?: string;
+  card_used?: string;
   account_number?: string;
   id: 0;
 }
@@ -36,7 +36,7 @@ interface FormData {
 interface PaymentInformation {
   usedOnlineCard: boolean;
   accountnumber?: string;
-  cardnumber?: string;
+  cardUsed?: string;
 }
 interface ReceiptRequestBody {
   receipt: Receipt;
@@ -51,7 +51,7 @@ const ReceiptPage = () => {
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [amountInput, setAmountInput] = useState('');
   const [accountNumber, setAccountNumber] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
+  // const [cardUsed, setCardUsed] = useState('');
 
   const [attachments, setAttachments] = useState<File[]>([]);
   const allowedTypes = [
@@ -104,14 +104,14 @@ const ReceiptPage = () => {
     name: '',
     description: '',
     id: 0,
-    card_number: '',
+    card_used: '',
     account_number: '',
   });
 
   const [errors, setErrors] = useState({
     amount: '',
     account_number: '',
-    card_number: '',
+    card_used: '',
     name: '',
     committee_id: '',
     attachments: '',
@@ -121,7 +121,7 @@ const ReceiptPage = () => {
     const newErrors: typeof errors = {
       amount: '',
       account_number: '',
-      card_number: '',
+      card_used: '',
       name: '',
       committee_id: '',
       attachments: '',
@@ -130,6 +130,12 @@ const ReceiptPage = () => {
     if (!usedOnlineCard) {
       if (!/^\d{11}$/.test(formdata.account_number || '')) {
         newErrors.account_number = 'Kontonummer må være 11 sifre';
+      }
+    }
+
+    if (usedOnlineCard) {
+      if (!formdata.card_used) {
+        newErrors.card_used = 'Velg kort benyttet';
       }
     }
 
@@ -161,17 +167,10 @@ const ReceiptPage = () => {
     return parts.join(' ');
   };
 
-  const formatCardNumber = (value: string) => {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(.{4})/g, '$1 ')
-      .trim();
-  };
-
   const submitform = async () => {
     if (!validateForm()) return;
 
-    const normalizedAmount = amountInput.replace(',', '.');
+    const normalizedAmount = amountInput.replace(',', '.'); //bytt ut "," med "."
     const numericAmount = parseFloat(normalizedAmount);
     const updatedFormData = { ...formdata, amount: numericAmount };
 
@@ -181,7 +180,7 @@ const ReceiptPage = () => {
       const paymentInfo: PaymentInformation = {
         usedOnlineCard: usedOnlineCard,
         accountnumber: usedOnlineCard ? '' : formdata.account_number,
-        cardnumber: usedOnlineCard ? formdata.card_number : '',
+        cardUsed: usedOnlineCard ? formdata.card_used : '',
       };
 
       const convertedAttachments = await Promise.all(
@@ -295,11 +294,10 @@ const ReceiptPage = () => {
                 className="text-black p-3 rounded w-full"
                 onChange={(e) => {
                   let value = e.target.value
-                    .replace(/[^0-9.,]/g, '')        // allow digits, dot, comma
+                    .replace(/[^0-9.,]/g, '') // allow digits, dot, comma
                     .replace(/([.,].*)[.,]/g, '$1'); // only one decimal separator
 
-                  value = value.slice(0, 6);         // Limit to 6 characters
-                  console.log(value);
+                  value = value.slice(0, 6); // Limit to 6 characters
                   setAmountInput(value);
                 }}
                 value={amountInput}
@@ -354,7 +352,7 @@ const ReceiptPage = () => {
                 onChange={(e) => {
                   setFormdata({
                     ...formdata,
-                    committee_id: e.target.value,
+                    card_used: e.target.value,
                   });
                 }}
               >
@@ -368,9 +366,11 @@ const ReceiptPage = () => {
                       );
                     })
                   : null}
-                  <option key="Interkom" value="Interkom">Interkom</option>
+                <option key="Interkom" value="Interkom">
+                  Interkom
+                </option>
               </select>
-              <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.card_number || ' '}</p>
+              <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.card_used || ' '}</p>
             </div>
             <div className="flex-col w-[20rem]">
               <p className="text-left tracking-wide">Beløp</p>
@@ -380,11 +380,10 @@ const ReceiptPage = () => {
                 className="text-black p-3 rounded w-full"
                 onChange={(e) => {
                   let value = e.target.value
-                    .replace(/[^0-9.,]/g, '')        // allow digits, dot, comma
-                    .replace(/([.,].*)[.,]/g, '$1'); 
-                    
+                    .replace(/[^0-9.,]/g, '') // allow digits, dot, comma
+                    .replace(/([.,].*)[.,]/g, '$1');
+
                   value = value.slice(0, 6); // Limit to 6 characters
-                  console.log(value);
                   setAmountInput(value);
                 }}
                 value={amountInput}
@@ -437,7 +436,8 @@ const ReceiptPage = () => {
           </h1>
           <p className="mx-5">
             Last opp et tydelig bilde/scan av kvitteringen. Husk at kvitteringen må være gyldig for
-            at den skal godkjennes. Organisasjonsnummer må være <b>synlig</b>. Er du usikker på om kvitteringen er gyldig?{' '}
+            at den skal godkjennes. Organisasjonsnummer må være <b>synlig</b>. Er du usikker på om
+            kvitteringen er gyldig?{' '}
             <a href="/faq" className="text-green-400 underline">
               Se her
             </a>

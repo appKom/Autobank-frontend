@@ -28,7 +28,7 @@ export interface CompleteReceipt {
   latestReviewCreatedAt: string;
   latestReviewComment: string;
   paymentAccountNumber: string;
-  cardCardNumber: string;
+  cardUsed: string;
   attachments: string[];
 }
 

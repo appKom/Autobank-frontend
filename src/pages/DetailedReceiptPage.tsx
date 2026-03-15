@@ -112,7 +112,7 @@ const DetailedReceiptPage = () => {
                   </p>
                   {data.paymentOrCard === 'Card' ? (
                     <p>
-                      <span className="font-semibold">Kortnummer:</span> {data.cardCardNumber}
+                      <span className="font-semibold">Kort benyttet:</span> {data.cardUsed}
                     </p>
                   ) : (
                     <p>
