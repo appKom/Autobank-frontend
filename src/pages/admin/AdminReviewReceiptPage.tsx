@@ -205,7 +205,7 @@ const AdminReviewReceiptPage = () => {
                       return (
                         <AttachmentViewer
                           type="image"
-                          src={`data:application/pdf;base64,${base64}`}
+                          src={`data:${fileType};base64,${base64}`}
                         />
                       );
                     } else {
