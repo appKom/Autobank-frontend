@@ -15,7 +15,7 @@ const ReceiptRow = ({ receipt }: ReceiptOverviewProps) => {
 
     const fullLink = `${linkBase}${receipt.receiptId}`;
 
-    navigate(fullLink);
+    navigate(fullLink + location.search);
   };
 
   return (
