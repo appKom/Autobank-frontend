@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { fetchAllReceipts, Receipt_Info } from '../../api/adminReceiptAPI';
+import { fetchAllReceipts } from '../../api/adminReceiptAPI';
 import { useQuery } from '@tanstack/react-query';
 import { fetchCommittees, Committee } from '../../api/baseAPI';
 import {
@@ -14,15 +14,16 @@ import {
 import ReceiptTable from '../../components/receipt/ReceiptTable';
 import debounce from 'lodash.debounce';
 import AdminBadge from '../../components/admin/AdminBadge';
+import { useSearchParams } from 'react-router-dom';
 
 const AdminReceiptPage = () => {
-  const [receipts, setReceipts] = useState<Receipt_Info[]>([]);
   const [selectedCommittees, setSelectedCommittees] = useState<string[]>([]);
-  const [receiptStatus, setReceiptStatus] = useState<string | null>(null);
+  const [receiptStatus, setReceiptStatus] = useState<string | null>('NONE');
   const [searchTerm, setSearchTerm] = useState<string>(''); // The raw value from the input field
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(); // The debounced value
 
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get('page') || 1);
   const rowsPerPage = 10;
 
   const debouncedSetSearchTerm = useMemo(
@@ -37,19 +38,19 @@ const AdminReceiptPage = () => {
     debouncedSetSearchTerm(value);
   };
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setSearchParams((prev: URLSearchParams) => {
+      const params = new URLSearchParams(prev);
+      params.set('page', String(newPage));
+      return params;
+    });
+  };
+
   useEffect(() => {
     return () => {
       debouncedSetSearchTerm.cancel();
     };
   }, [debouncedSetSearchTerm]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearchTerm, selectedCommittees, receiptStatus]);
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
 
   const {
     data: receiptData,

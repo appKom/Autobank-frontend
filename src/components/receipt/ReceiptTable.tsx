@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReceiptRow from '../../components/receipt/ReceiptRow';
 import { Receipt_Info } from '../../api/adminReceiptAPI';
 import Button from '../../components/universal/Button';
