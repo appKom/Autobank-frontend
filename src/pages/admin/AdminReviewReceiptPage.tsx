@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  CalendarIcon,
-  CreditCardIcon,
-  UserIcon,
-  PaperClipIcon,
-  ClockIcon,
-  CurrencyEuroIcon,
-} from '@heroicons/react/24/outline';
+import { CalendarIcon, CreditCardIcon, UserIcon, PaperClipIcon } from '@heroicons/react/24/outline';
 import { fetchCompleteReceipt, postReceiptReview, ReceiptReview } from '../../api/adminReceiptAPI';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -203,10 +196,7 @@ const AdminReviewReceiptPage = () => {
                     } else if (fileType.includes('image')) {
                       // image attachment
                       return (
-                        <AttachmentViewer
-                          type="image"
-                          src={`data:${fileType};base64,${base64}`}
-                        />
+                        <AttachmentViewer type="image" src={`data:${fileType};base64,${base64}`} />
                       );
                     } else {
                       return (

@@ -17,7 +17,6 @@ import AdminBadge from '../../components/admin/AdminBadge';
 import { useSearchParams } from 'react-router-dom';
 
 const AdminReceiptPage = () => {
-  const [selectedCommittees, setSelectedCommittees] = useState<string[]>([]);
   const [receiptStatus, setReceiptStatus] = useState<string | null>('NONE');
   const [searchTerm, setSearchTerm] = useState<string>(''); // The raw value from the input field
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(); // The debounced value
@@ -25,6 +24,10 @@ const AdminReceiptPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page') || 1);
   const rowsPerPage = 10;
+
+  const selectedCommittees = useMemo(() => {
+    return searchParams.get('committees')?.split(',').filter(Boolean) || [];
+  }, [searchParams]);
 
   const debouncedSetSearchTerm = useMemo(
     () => debounce((value: string) => setDebouncedSearchTerm(value), 500),
@@ -82,7 +85,15 @@ const AdminReceiptPage = () => {
 
   const handleCommitteeChange = (event: any) => {
     const value = event.target.value;
-    setSelectedCommittees(typeof value === 'string' ? value.split(',') : value);
+    const params = new URLSearchParams(searchParams);
+
+    if (value.length) {
+      params.set('committees', value.join(','));
+    } else {
+      params.delete('committees');
+    }
+
+    setSearchParams(params);
   };
 
   return (
@@ -115,7 +126,7 @@ const AdminReceiptPage = () => {
           <Select
             id="committeeDropdown"
             multiple
-            value={selectedCommittees || ''}
+            value={selectedCommittees}
             onChange={handleCommitteeChange}
             inputProps={{ 'aria-label': 'Without label' }}
             input={<OutlinedInput notched={false} />}
@@ -130,6 +141,11 @@ const AdminReceiptPage = () => {
               backgroundColor: 'white',
               height: '40px',
               textAlign: 'left',
+            }}
+            MenuProps={{
+              disableScrollLock: true,
+              container: document.body,
+              keepMounted: true,
             }}
           >
             {committeeData &&
