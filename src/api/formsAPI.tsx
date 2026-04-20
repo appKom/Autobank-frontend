@@ -28,5 +28,5 @@ export const submitReceipt = async (receiptbody: ReceiptRequestBody) => {
 };
 
 export const submitEconomicRequest = async (application: Application) => {
-  //return sendRequest<Application, void>("/application/create", POST, application);
+  return sendRequest<Application, void>("/application/create", POST, application);
 };

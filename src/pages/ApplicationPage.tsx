@@ -1,8 +1,7 @@
 import Navbar from '../components/universal/Navbar';
 import { useState } from 'react';
 import FileUpload from '../components/form/FileUpload';
-import { fileToBase64 } from '../utils/fileutils';
-// import { submitEconomicRequest } from "../api/formsAPI";
+import { submitEconomicRequest } from "../api/formsAPI";
 
 interface Application {
   field1: string;
@@ -37,23 +36,7 @@ const ApplicationPage = () => {
   const submitform = async () => {
     setDisableSubmit(true);
 
-    const application: Application = {
-      field1: formdata.field1,
-      field2: formdata.field2,
-      field3: formdata.field3,
-      amount: formdata.amount,
-      date: formdata.date,
-      attachments: await Promise.all(
-        [...attachments].map(async (file) => await fileToBase64(file))
-      ),
-      comments: formdata.comments,
-      id: 0,
-    };
-
-    // const res: Response = await submitEconomicRequest(
-    //   getAccessTokenSilently,
-    //   application
-    // );
+    const res: Response = await submitEconomicRequest(getAccessTokenSilently, { ...formdata, id: 0 });
 
     alert('Søknad sendt inn!');
     setDisableSubmit(false);
@@ -111,6 +94,7 @@ const ApplicationPage = () => {
               className="text-black p-3 rounded w-full"
               onChange={(e) => setFormdata({ ...formdata, field3: e.target.value })}
             >
+              <option value="">Velg betalingsmåte</option>
               <option value="faktura">Faktura</option>
               <option value="utlegg">Utlegg</option>
             </select>
