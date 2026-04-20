@@ -22,6 +22,12 @@ const ApplicationPage = () => {
   });
 
   const submitform = async () => {
+    if (!formdata.description) return alert('Fyll inn beskrivelse.');
+    if (!formdata.purpose) return alert('Fyll inn formål.');
+    if (!formdata.amount) return alert('Fyll inn beløp.');
+    if (!formdata.paymentDescription) return alert('Velg betalingsmåte.');
+    if (!formdata.date) return alert('Velg dato.');
+
     setDisableSubmit(true);
     try {
       await submitEconomicRequest({
@@ -37,7 +43,8 @@ const ApplicationPage = () => {
         attachments: await Promise.all(attachments.map((file) => fileToBase64(file))),
       });
       alert('Søknad sendt inn!');
-    } catch {
+    } catch (e) {
+      console.error(e);
       alert('Noe gikk galt. Prøv igjen.');
     }
     setDisableSubmit(false);
