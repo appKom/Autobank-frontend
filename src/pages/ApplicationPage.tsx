@@ -9,6 +9,7 @@ interface Application {
   field2: string;
   field3: string;
   amount: number;
+  date: string;
   attachments: string[];
   comments: string;
   id: 0;
@@ -27,6 +28,7 @@ const ApplicationPage = () => {
     field2: '',
     field3: '',
     amount: 0,
+    date: '',
     attachments: [],
     comments: '',
     id: 0,
@@ -40,6 +42,7 @@ const ApplicationPage = () => {
       field2: formdata.field2,
       field3: formdata.field3,
       amount: formdata.amount,
+      date: formdata.date,
       attachments: await Promise.all(
         [...attachments].map(async (file) => await fileToBase64(file))
       ),
@@ -93,18 +96,8 @@ const ApplicationPage = () => {
             onChange={(e) => setFormdata({ ...formdata, field2: e.target.value })}
           ></textarea>
         </div>
-        <div className="flex-col mt-[20px]">
-          <p className="text-white w-full text-left text-l mb-[5px]">Aktivitetsplan</p>
-          <textarea
-            name=""
-            id=""
-            className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
-            onChange={(e) => setFormdata({ ...formdata, field3: e.target.value })}
-          ></textarea>
-        </div>
-
-        <div className="text-white flex justify-center gap-10 mt-[20px]">
-          <div className="flex-col w-full">
+        <div className="text-white flex justify-center gap-4 mt-[20px]">
+          <div className="flex-col w-1/2">
             <p className="text-left tracking-wide">Beløp</p>
             <input
               placeholder={'530'}
@@ -112,6 +105,25 @@ const ApplicationPage = () => {
               onChange={(e) => setFormdata({ ...formdata, amount: parseInt(e.target.value) })}
             ></input>
           </div>
+          <div className="flex-col w-1/2">
+            <p className="text-left tracking-wide">Hvordan skal betalingen foregå?</p>
+            <select
+              className="text-black p-3 rounded w-full"
+              onChange={(e) => setFormdata({ ...formdata, field3: e.target.value })}
+            >
+              <option value="faktura">Faktura</option>
+              <option value="utlegg">Utlegg</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="text-white flex-col mt-[20px]">
+          <p className="text-left tracking-wide mb-[5px]">Dato utstyr skal kjøpes inn</p>
+          <input
+            type="date"
+            className="text-black p-3 rounded w-full"
+            onChange={(e) => setFormdata({ ...formdata, date: e.target.value })}
+          />
         </div>
 
         <div className="text-white mb-[10px] mt-[10px]">
