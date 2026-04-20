@@ -1,18 +1,8 @@
 import Navbar from '../components/universal/Navbar';
 import { useState } from 'react';
 import FileUpload from '../components/form/FileUpload';
-import { submitEconomicRequest } from "../api/formsAPI";
-
-interface Application {
-  field1: string;
-  field2: string;
-  field3: string;
-  amount: number;
-  date: string;
-  attachments: string[];
-  comments: string;
-  id: 0;
-}
+import { fileToBase64 } from '../utils/fileutils';
+import { submitEconomicRequest } from '../api/formsAPI';
 
 const ApplicationPage = () => {
   const [disableSubmit, setDisableSubmit] = useState(false);
@@ -22,23 +12,34 @@ const ApplicationPage = () => {
     setAttachments([...files]);
   };
 
-  const [formdata, setFormdata]: [Application, any] = useState({
-    field1: '',
-    field2: '',
-    field3: '',
+  const [formdata, setFormdata] = useState({
+    description: '',
+    purpose: '',
+    paymentDescription: '',
     amount: 0,
     date: '',
-    attachments: [],
-    comments: '',
-    id: 0,
+    otherInformation: '',
   });
 
   const submitform = async () => {
     setDisableSubmit(true);
-
-    const res: Response = await submitEconomicRequest(getAccessTokenSilently, { ...formdata, id: 0 });
-
-    alert('Søknad sendt inn!');
+    try {
+      await submitEconomicRequest({
+        economicrequest: {
+          subject: formdata.description,
+          description: formdata.description,
+          purpose: formdata.purpose,
+          amount: formdata.amount,
+          paymentDescription: formdata.paymentDescription,
+          date: `${formdata.date}T00:00:00`,
+          otherInformation: formdata.otherInformation,
+        },
+        attachments: await Promise.all(attachments.map((file) => fileToBase64(file))),
+      });
+      alert('Søknad sendt inn!');
+    } catch {
+      alert('Noe gikk galt. Prøv igjen.');
+    }
     setDisableSubmit(false);
   };
 
@@ -65,7 +66,7 @@ const ApplicationPage = () => {
             name=""
             id=""
             className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
-            onChange={(e) => setFormdata({ ...formdata, field1: e.target.value })}
+            onChange={(e) => setFormdata({ ...formdata, description: e.target.value })}
           ></textarea>
         </div>
         <div className="flex-col mt-[20px]">
@@ -76,7 +77,7 @@ const ApplicationPage = () => {
             name=""
             id=""
             className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
-            onChange={(e) => setFormdata({ ...formdata, field2: e.target.value })}
+            onChange={(e) => setFormdata({ ...formdata, purpose: e.target.value })}
           ></textarea>
         </div>
         <div className="text-white flex justify-center gap-4 mt-[20px]">
@@ -92,7 +93,7 @@ const ApplicationPage = () => {
             <p className="text-left tracking-wide">Hvordan skal betalingen foregå?</p>
             <select
               className="text-black p-3 rounded w-full"
-              onChange={(e) => setFormdata({ ...formdata, field3: e.target.value })}
+              onChange={(e) => setFormdata({ ...formdata, paymentDescription: e.target.value })}
             >
               <option value="">Velg betalingsmåte</option>
               <option value="faktura">Faktura</option>
@@ -127,7 +128,7 @@ const ApplicationPage = () => {
             name=""
             id=""
             className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
-            onChange={(e) => setFormdata({ ...formdata, comments: e.target.value })}
+            onChange={(e) => setFormdata({ ...formdata, otherInformation: e.target.value })}
           ></textarea>
         </div>
 

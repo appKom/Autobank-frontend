@@ -13,20 +13,25 @@ interface ReceiptRequestBody {
   attachments: string[];
 }
 
-interface Application {
-  field1: string;
-  field2: string;
-  field3: string;
+interface EconomicrequestDTO {
+  subject: string;
+  purpose: string;
+  date: string;
+  description: string;
   amount: number;
+  paymentDescription: string;
+  otherInformation?: string;
+}
+
+interface EconomicrequestRequestBody {
+  economicrequest: EconomicrequestDTO;
   attachments: string[];
-  comments: string;
-  id: 0;
 }
 
 export const submitReceipt = async (receiptbody: ReceiptRequestBody) => {
   return sendRequest<ReceiptRequestBody, void>('/receipt/create', POST, receiptbody);
 };
 
-export const submitEconomicRequest = async (application: Application) => {
-  return sendRequest<Application, void>("/application/create", POST, application);
+export const submitEconomicRequest = async (body: EconomicrequestRequestBody) => {
+  return sendRequest<EconomicrequestRequestBody, void>('/economicrequest/create', POST, body);
 };
