@@ -9,6 +9,7 @@ export interface UserCommittees {
   email: string;
   name: string;
   committees: string[];
+  imageUrl?: string;
 }
 
 export const fetchCommittees = async () => {

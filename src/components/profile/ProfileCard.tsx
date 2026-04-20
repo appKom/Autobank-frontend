@@ -20,7 +20,7 @@ const ProfileCard = () => {
   return (
     <div className="w-64 bg-[#669782] text-white p-8 min-h-max rounded-xl ml-5">
       <div className="flex flex-col items-center">
-        <img src={profilePicture} alt="" />
+        <img src={data && data.imageUrl ? data.imageUrl : profilePicture} alt="" />
         <h2 className="text-2xl mb-2 mt-5">{data && data.name}</h2>
         <div className="flow-root my-3">
           <img src={mailIcon} alt="" className="float-left size-5 mr-2"/>
