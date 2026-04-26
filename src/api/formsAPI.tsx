@@ -21,6 +21,8 @@ interface EconomicrequestDTO {
   amount: number;
   paymentDescription: string;
   otherInformation?: string;
+  committeeId?: string;
+  onlinemail?: string;
 }
 
 interface EconomicrequestRequestBody {

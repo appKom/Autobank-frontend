@@ -20,7 +20,7 @@ type NavdropdownProps = {
 
 const routes = [
   { name: 'Kvittering', path: `${import.meta.env.BASE_URL}kvittering` },
-  { name: "Søknad", path: `${import.meta.env.BASE_URL}soknad` },
+  { name: "Utstyrspotten", path: `${import.meta.env.BASE_URL}soknad` },
   { name: 'Min side', path: `${import.meta.env.BASE_URL}minside` },
 ];
 

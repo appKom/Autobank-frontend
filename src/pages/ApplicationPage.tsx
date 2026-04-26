@@ -1,16 +1,16 @@
 import Navbar from '../components/universal/Navbar';
 import { useState } from 'react';
-import FileUpload from '../components/form/FileUpload';
-import { fileToBase64 } from '../utils/fileutils';
+import { useQuery } from '@tanstack/react-query';
+import { fetchCommittees } from '../api/baseAPI';
 import { submitEconomicRequest } from '../api/formsAPI';
 
 const ApplicationPage = () => {
   const [disableSubmit, setDisableSubmit] = useState(false);
-  const [attachments, setAttachments] = useState<File[]>([]);
 
-  const onFileChange = async (files: File[]) => {
-    setAttachments([...files]);
-  };
+  const { data: committees } = useQuery({
+    queryKey: ['committees'],
+    queryFn: () => fetchCommittees(),
+  });
 
   const [formdata, setFormdata] = useState({
     description: '',
@@ -19,6 +19,8 @@ const ApplicationPage = () => {
     amount: 0,
     date: '',
     otherInformation: '',
+    committee_id: '',
+    onlinemail: '',
   });
 
   const submitform = async () => {
@@ -39,8 +41,10 @@ const ApplicationPage = () => {
           paymentDescription: formdata.paymentDescription,
           date: `${formdata.date}T00:00:00`,
           otherInformation: formdata.otherInformation,
+          committeeId: formdata.committee_id || undefined,
+          onlinemail: formdata.onlinemail || undefined,
         },
-        attachments: await Promise.all(attachments.map((file) => fileToBase64(file))),
+        attachments: [],
       });
       alert('Søknad sendt inn!');
     } catch (e) {
@@ -87,6 +91,15 @@ const ApplicationPage = () => {
             onChange={(e) => setFormdata({ ...formdata, purpose: e.target.value })}
           ></textarea>
         </div>
+        <div className="flex-col mt-[20px]">
+          <p className="text-white w-full text-left text-l mb-[5px]">Din online-mail</p>
+          <input
+            type="email"
+            placeholder="bruker@online.ntnu.no"
+            className="w-full border-2 border-gray-300 rounded-lg p-4 bg-white text-black"
+            onChange={(e) => setFormdata({ ...formdata, onlinemail: e.target.value })}
+          />
+        </div>
         <div className="text-white flex justify-center gap-4 mt-[20px]">
           <div className="flex-col w-1/2">
             <p className="text-left tracking-wide">Beløp</p>
@@ -109,28 +122,35 @@ const ApplicationPage = () => {
           </div>
         </div>
 
-        <div className="text-white flex-col mt-[20px]">
-          <p className="text-left tracking-wide mb-[5px]">Dato utstyr skal kjøpes inn</p>
-          <input
-            type="date"
-            className="text-black p-3 rounded w-full"
-            onChange={(e) => setFormdata({ ...formdata, date: e.target.value })}
-          />
-        </div>
-
-        <div className="text-white mb-[10px] mt-[10px]">
-          <h1 className="text-3xl text-white text-center self-center mt-[20px] font-thin mb-[10px]">
-            Vedlegg
-          </h1>
-          <p>Last opp eventuelle filer/bilder av budsjett eller annet</p>
-        </div>
-        <div className="flex-col">
-          <p className="text-white w-full text-left text-l mb-[5px]">Vedlegg</p>
-          <FileUpload files={attachments} onFileChange={onFileChange} />
+        <div className="text-white flex justify-center gap-4 mt-[20px]">
+          <div className="flex-col w-1/2">
+            <p className="text-left tracking-wide">Dato utstyr skal kjøpes inn</p>
+            <input
+              type="date"
+              className="text-black p-3 rounded w-full"
+              onChange={(e) => setFormdata({ ...formdata, date: e.target.value })}
+            />
+          </div>
+          <div className="flex-col w-1/2">
+            <p className="text-left tracking-wide">Ansvarlig enhet</p>
+            <select
+              className="text-black p-3 rounded w-full"
+              onChange={(e) => setFormdata({ ...formdata, committee_id: e.target.value })}
+            >
+              <option value="">Ingen</option>
+              {committees && committees.length
+                ? committees.map((committee: any) => (
+                    <option key={committee.id} value={committee.id}>
+                      {committee.name}
+                    </option>
+                  ))
+                : null}
+            </select>
+          </div>
         </div>
 
         <div className="flex-col mt-[20px]">
-          <p className="text-white w-full text-left text-l mb-[5px]">Kommentarer</p>
+          <p className="text-white w-full text-left text-l mb-[5px]">Annen Informasjon</p>
           <textarea
             name=""
             id=""
