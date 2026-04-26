@@ -26,9 +26,11 @@ const ApplicationPage = () => {
   const submitform = async () => {
     if (!formdata.description) return alert('Fyll inn beskrivelse.');
     if (!formdata.purpose) return alert('Fyll inn formål.');
+    if (!formdata.onlinemail) return alert('Fyll inn online-mail.');
     if (!formdata.amount) return alert('Fyll inn beløp.');
     if (!formdata.paymentDescription) return alert('Velg betalingsmåte.');
     if (!formdata.date) return alert('Velg dato.');
+    if (!formdata.committee_id) return alert('Velg ansvarlig enhet.');
 
     setDisableSubmit(true);
     try {
