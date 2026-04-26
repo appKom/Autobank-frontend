@@ -55,7 +55,7 @@ const ApplicationPage = () => {
       <div className="max-w-2xl ml-auto mr-auto px-10">
         <div className="flex justify-center gap-[50px] mt-[60px]">
           <h1 className="text-5xl text-white text-center self-center mb-auto mt-auto font-thin">
-            Søknadsskjema
+            Søk utstyrspotten
           </h1>
           <img
             src={'../../../resources/images/receiptpageimage.png'}
