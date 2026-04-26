@@ -1,36 +1,78 @@
-import { z } from 'zod';
-
-export const MAX_FILE_SIZE = 5 * 1024 * 1024;
-
 export const receiptSchema = (usedOnlineCard: boolean) =>
-  z.object({
-    amount: z.string().min(1, 'Beløp mangler'),
+  ({
+    amount: {
+      required: true,
+      pattern: /^\d+([.,]\d+)?$/,
+      messages: {
+        required: 'Beløp mangler',
+        pattern: 'Ugyldig beløp',
+      },
+    },
 
-    account_number: z
-      .string()
-      .optional()
-      .refine((val) => {
-        if (usedOnlineCard) return true;
-        return /^\d{11}$/.test(val || '');
-      }, 'Kontonummer må være 11 sifre'),
+    account_number: {
+      required: !usedOnlineCard,
+      pattern: /^\d{11}$/,
+      messages: {
+        required: 'Kontonummer mangler',
+        pattern: 'Kontonummer må være 11 sifre',
+      },
+    },
 
-    card_used: z
-      .string()
-      .optional()
-      .refine(() => {
-        if (!usedOnlineCard) return true;
-        return true;
-      })
-      .refine((val) => {
-        if (!usedOnlineCard) return true;
-        return !!val;
-      }, 'Velg kort benyttet'),
+    card_used: {
+      required: usedOnlineCard,
+      messages: {
+        required: 'Velg kort benyttet',
+      },
+    },
 
-    name: z.string().min(1, 'Vennligst skriv anledning'),
+    name: {
+      required: true,
+      messages: {
+        required: 'Vennligst skriv anledning',
+      },
+    },
 
-    committee_id: z.string().min(1, 'Velg en ansvarlig enhet'),
+    committee_id: {
+      required: true,
+      messages: {
+        required: 'Velg en ansvarlig enhet',
+      },
+    },
 
-    description: z.string().optional(),
+    description: {
+      required: false,
+      messages: {},
+    },
 
-    attachments: z.array(z.any()).min(1, 'Last opp minst én kvittering/vedlegg'),
-  });
+    attachments: {
+      required: true,
+      messages: {
+        required: 'Last opp minst én kvittering/vedlegg',
+      },
+    },
+  }) as const;
+
+type Schema = ReturnType<typeof receiptSchema>;
+type FieldKey = keyof Schema;
+
+export function getReceiptFieldValidation(schema: Schema, field: FieldKey) {
+  const config = schema[field];
+  const rules: any = {};
+
+  // required
+  if (config.required) {
+    rules.required = config.messages.required;
+  }
+
+  // pattern
+  if ('pattern' in config && config.pattern) {
+    rules.validate = (value: any) => {
+      if (!value && !config.required) return true;
+
+      const ok = config.pattern.test(value || '');
+      return ok || config.messages.pattern;
+    };
+  }
+
+  return rules;
+}
