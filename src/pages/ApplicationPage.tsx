@@ -1,58 +1,58 @@
 import Navbar from '../components/universal/Navbar';
 import { useState } from 'react';
-import FileUpload from '../components/form/FileUpload';
-import { fileToBase64 } from '../utils/fileutils';
-// import { submitEconomicRequest } from "../api/formsAPI";
-
-interface Application {
-  field1: string;
-  field2: string;
-  field3: string;
-  amount: number;
-  attachments: string[];
-  comments: string;
-  id: 0;
-}
+import { useQuery } from '@tanstack/react-query';
+import { fetchCommittees } from '../api/baseAPI';
+import { submitEconomicRequest } from '../api/formsAPI';
 
 const ApplicationPage = () => {
   const [disableSubmit, setDisableSubmit] = useState(false);
-  const [attachments, setAttachments] = useState<File[]>([]);
 
-  const onFileChange = async (files: File[]) => {
-    setAttachments([...files]);
-  };
+  const { data: committees } = useQuery({
+    queryKey: ['committees'],
+    queryFn: () => fetchCommittees(),
+  });
 
-  const [formdata, setFormdata]: [Application, any] = useState({
-    field1: '',
-    field2: '',
-    field3: '',
+  const [formdata, setFormdata] = useState({
+    description: '',
+    purpose: '',
+    paymentDescription: '',
     amount: 0,
-    attachments: [],
-    comments: '',
-    id: 0,
+    date: '',
+    otherInformation: '',
+    committee_id: '',
+    onlinemail: '',
   });
 
   const submitform = async () => {
+    if (!formdata.description) return alert('Fyll inn beskrivelse.');
+    if (!formdata.purpose) return alert('Fyll inn formål.');
+    if (!formdata.onlinemail) return alert('Fyll inn online-mail.');
+    if (!formdata.amount) return alert('Fyll inn beløp.');
+    if (!formdata.paymentDescription) return alert('Velg betalingsmåte.');
+    if (!formdata.date) return alert('Velg dato.');
+    if (!formdata.committee_id) return alert('Velg ansvarlig enhet.');
+
     setDisableSubmit(true);
-
-    const application: Application = {
-      field1: formdata.field1,
-      field2: formdata.field2,
-      field3: formdata.field3,
-      amount: formdata.amount,
-      attachments: await Promise.all(
-        [...attachments].map(async (file) => await fileToBase64(file))
-      ),
-      comments: formdata.comments,
-      id: 0,
-    };
-
-    // const res: Response = await submitEconomicRequest(
-    //   getAccessTokenSilently,
-    //   application
-    // );
-
-    alert('Søknad sendt inn!');
+    try {
+      await submitEconomicRequest({
+        economicrequest: {
+          subject: formdata.description,
+          description: formdata.description,
+          purpose: formdata.purpose,
+          amount: formdata.amount,
+          paymentDescription: formdata.paymentDescription,
+          date: `${formdata.date}T00:00:00`,
+          otherInformation: formdata.otherInformation,
+          committeeId: formdata.committee_id || undefined,
+          onlinemail: formdata.onlinemail || undefined,
+        },
+        attachments: [],
+      });
+      alert('Søknad sendt inn!');
+    } catch (e) {
+      console.error(e);
+      alert('Noe gikk galt. Prøv igjen.');
+    }
     setDisableSubmit(false);
   };
 
@@ -61,7 +61,7 @@ const ApplicationPage = () => {
       <div className="max-w-2xl ml-auto mr-auto px-10">
         <div className="flex justify-center gap-[50px] mt-[60px]">
           <h1 className="text-5xl text-white text-center self-center mb-auto mt-auto font-thin">
-            Søknadsskjema
+            Søk utstyrspotten
           </h1>
           <img
             src={'../../../resources/images/receiptpageimage.png'}
@@ -79,7 +79,7 @@ const ApplicationPage = () => {
             name=""
             id=""
             className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
-            onChange={(e) => setFormdata({ ...formdata, field1: e.target.value })}
+            onChange={(e) => setFormdata({ ...formdata, description: e.target.value })}
           ></textarea>
         </div>
         <div className="flex-col mt-[20px]">
@@ -90,21 +90,20 @@ const ApplicationPage = () => {
             name=""
             id=""
             className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
-            onChange={(e) => setFormdata({ ...formdata, field2: e.target.value })}
+            onChange={(e) => setFormdata({ ...formdata, purpose: e.target.value })}
           ></textarea>
         </div>
         <div className="flex-col mt-[20px]">
-          <p className="text-white w-full text-left text-l mb-[5px]">Aktivitetsplan</p>
-          <textarea
-            name=""
-            id=""
-            className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
-            onChange={(e) => setFormdata({ ...formdata, field3: e.target.value })}
-          ></textarea>
+          <p className="text-white w-full text-left text-l mb-[5px]">Din online-mail</p>
+          <input
+            type="email"
+            placeholder="bruker@online.ntnu.no"
+            className="w-full border-2 border-gray-300 rounded-lg p-4 bg-white text-black"
+            onChange={(e) => setFormdata({ ...formdata, onlinemail: e.target.value })}
+          />
         </div>
-
-        <div className="text-white flex justify-center gap-10 mt-[20px]">
-          <div className="flex-col w-full">
+        <div className="text-white flex justify-center gap-4 mt-[20px]">
+          <div className="flex-col w-1/2">
             <p className="text-left tracking-wide">Beløp</p>
             <input
               placeholder={'530'}
@@ -112,26 +111,53 @@ const ApplicationPage = () => {
               onChange={(e) => setFormdata({ ...formdata, amount: parseInt(e.target.value) })}
             ></input>
           </div>
+          <div className="flex-col w-1/2">
+            <p className="text-left tracking-wide">Hvordan skal betalingen foregå?</p>
+            <select
+              className="text-black p-3 rounded w-full"
+              onChange={(e) => setFormdata({ ...formdata, paymentDescription: e.target.value })}
+            >
+              <option value="">Velg betalingsmåte</option>
+              <option value="faktura">Faktura</option>
+              <option value="utlegg">Utlegg</option>
+            </select>
+          </div>
         </div>
 
-        <div className="text-white mb-[10px] mt-[10px]">
-          <h1 className="text-3xl text-white text-center self-center mt-[20px] font-thin mb-[10px]">
-            Vedlegg
-          </h1>
-          <p>Last opp eventuelle filer/bilder av budsjett eller annet</p>
-        </div>
-        <div className="flex-col">
-          <p className="text-white w-full text-left text-l mb-[5px]">Vedlegg</p>
-          <FileUpload files={attachments} onFileChange={onFileChange} />
+        <div className="text-white flex justify-center gap-4 mt-[20px]">
+          <div className="flex-col w-1/2">
+            <p className="text-left tracking-wide">Dato utstyr skal kjøpes inn</p>
+            <input
+              type="date"
+              className="text-black p-3 rounded w-full"
+              onChange={(e) => setFormdata({ ...formdata, date: e.target.value })}
+            />
+          </div>
+          <div className="flex-col w-1/2">
+            <p className="text-left tracking-wide">Ansvarlig enhet</p>
+            <select
+              className="text-black p-3 rounded w-full"
+              onChange={(e) => setFormdata({ ...formdata, committee_id: e.target.value })}
+            >
+              <option value="">Ingen</option>
+              {committees && committees.length
+                ? committees.map((committee: any) => (
+                    <option key={committee.id} value={committee.id}>
+                      {committee.name}
+                    </option>
+                  ))
+                : null}
+            </select>
+          </div>
         </div>
 
         <div className="flex-col mt-[20px]">
-          <p className="text-white w-full text-left text-l mb-[5px]">Kommentarer</p>
+          <p className="text-white w-full text-left text-l mb-[5px]">Annen Informasjon</p>
           <textarea
             name=""
             id=""
             className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
-            onChange={(e) => setFormdata({ ...formdata, comments: e.target.value })}
+            onChange={(e) => setFormdata({ ...formdata, otherInformation: e.target.value })}
           ></textarea>
         </div>
 
