@@ -4,26 +4,27 @@ import { useState } from 'react';
 import { fetchAllUserReceipts } from '../api/userAPI';
 import ReceiptTable from '../components/receipt/ReceiptTable';
 import { Pagination } from '@mui/material';
-import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 const ProfilePage = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(); // The debounced value
-  const [page, setPage] = useState(1);
   const rowsPerPage = 5;
   const [receiptStatus, setReceiptStatus] = useState<string | null>('NONE');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get('page') || 1);
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      params.set('page', String(newPage));
+      return params;
+    });
   };
 
   const { data: receiptData, isLoading: receiptDataLoading } = useQuery({
     queryKey: ['receipts_user', page - 1, rowsPerPage, receiptStatus, debouncedSearchTerm],
     queryFn: () => fetchAllUserReceipts(page - 1, rowsPerPage, receiptStatus),
   });
-
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearchTerm, receiptStatus]);
 
   return (
     <div className="flex min-h-screen pt-5 mx-5 gap-x-6">
