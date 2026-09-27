@@ -1,8 +1,8 @@
 import React from 'react';
-import { CalendarIcon, CreditCardIcon, UserIcon, PaperClipIcon } from '@heroicons/react/24/outline';
+import { CalendarIcon, UserIcon, PaperClipIcon } from '@heroicons/react/24/outline';
 import { fetchCompleteReceipt, postReceiptReview, ReceiptReview } from '../../api/adminReceiptAPI';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Spinner from '../../components/universal/Spinner';
 import AdminBadge from '../../components/admin/AdminBadge';
 import AttachmentViewer from '../../components/receipt/AttachmentViewer';
@@ -10,6 +10,7 @@ import AttachmentViewer from '../../components/receipt/AttachmentViewer';
 const AdminReviewReceiptPage = () => {
   const receiptid = useParams<{ receiptid: string }>().receiptid;
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const { data, isError, isLoading } = useQuery({
     queryKey: ['completereceipt', receiptid],
@@ -40,7 +41,7 @@ const AdminReviewReceiptPage = () => {
     try {
       await postReceiptReview(receiptreview);
       alert('Review sent');
-      navigate('/admin/kvittering');
+      navigate(`/admin/kvittering?${searchParams.toString()}`);
     } catch (error) {
       console.error(error);
       alert('Error sending review');
@@ -217,7 +218,7 @@ const AdminReviewReceiptPage = () => {
             </div>
 
             <form onSubmit={handleReviewSubmit} className="space-y-4 text-center ">
-              <h2 className="text-2xl">Ny review</h2>
+              <h2 className="text-2xl">Ny vurdering</h2>
               <div className=" ">
                 <label htmlFor="status" className="block text-sm font-medium">
                   Ny status
@@ -258,7 +259,7 @@ const AdminReviewReceiptPage = () => {
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
-                Send review
+                Send vurdering
               </button>
             </form>
           </div>
