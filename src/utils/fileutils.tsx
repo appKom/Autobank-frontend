@@ -1,9 +1,14 @@
 import heic2any from 'heic2any';
 
-const MAX_IMAGE_WIDTH = 1000;
-const MAX_IMAGE_HEIGHT = 800;
+const MAX_IMAGE_LONGEST_SIDE = 2400;
+const JPEG_QUALITY = 0.85; 
 
-const resizeImageFile = (file: File, quality = 0.9): Promise<File> => {
+const fitWithinLongestSide = (width: number, height: number) => {
+  const scale = Math.min(1, MAX_IMAGE_LONGEST_SIDE / Math.max(width, height));
+  return { width: Math.round(width * scale), height: Math.round(height * scale) };
+};
+
+const resizeImageFile = (file: File, quality = JPEG_QUALITY): Promise<File> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
@@ -12,22 +17,12 @@ const resizeImageFile = (file: File, quality = 0.9): Promise<File> => {
       URL.revokeObjectURL(url);
 
       // Only resize if the image exceeds max dimensions
-      if (img.width <= MAX_IMAGE_WIDTH && img.height <= MAX_IMAGE_HEIGHT) {
+      if (Math.max(img.width, img.height) <= MAX_IMAGE_LONGEST_SIDE) {
         resolve(file);
         return;
       }
 
-      // Calculate new dimensions keeping aspect ratio
-      let newWidth = img.width;
-      let newHeight = img.height;
-      if (newWidth > MAX_IMAGE_WIDTH) {
-        newHeight = Math.round(newHeight * (MAX_IMAGE_WIDTH / newWidth));
-        newWidth = MAX_IMAGE_WIDTH;
-      }
-      if (newHeight > MAX_IMAGE_HEIGHT) {
-        newWidth = Math.round(newWidth * (MAX_IMAGE_HEIGHT / newHeight));
-        newHeight = MAX_IMAGE_HEIGHT;
-      }
+      const { width: newWidth, height: newHeight } = fitWithinLongestSide(img.width, img.height);
 
       const canvas = document.createElement('canvas');
       canvas.width = newWidth;
@@ -68,7 +63,7 @@ const resizeImageFile = (file: File, quality = 0.9): Promise<File> => {
   });
 };
 
-const convertPngToJpeg = (file: File, quality = 0.9): Promise<File> => {
+const convertPngToJpeg = (file: File, quality = JPEG_QUALITY): Promise<File> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
@@ -76,18 +71,8 @@ const convertPngToJpeg = (file: File, quality = 0.9): Promise<File> => {
     img.onload = () => {
       URL.revokeObjectURL(url);
 
-      // Also resize during PNG conversion if needed
-      let targetWidth = img.width;
-      let targetHeight = img.height;
-      if (targetWidth > MAX_IMAGE_WIDTH) {
-        targetHeight = Math.round(targetHeight * (MAX_IMAGE_WIDTH / targetWidth));
-        targetWidth = MAX_IMAGE_WIDTH;
-      }
-      if (targetHeight > MAX_IMAGE_HEIGHT) {
-        targetWidth = Math.round(targetWidth * (MAX_IMAGE_HEIGHT / targetHeight));
-        targetHeight = MAX_IMAGE_HEIGHT;
-      }
-
+      const { width: targetWidth, height: targetHeight } = fitWithinLongestSide(img.width, img.height); 
+     
       const canvas = document.createElement('canvas');
       canvas.width = targetWidth;
       canvas.height = targetHeight;
@@ -147,7 +132,7 @@ export const fileToBase64 = async (file: File): Promise<string> => {
       const convertedBlob = await heic2any({
         blob: file,
         toType: 'image/jpeg',
-        quality: 0.9,
+        quality: 0.95,
       });
 
       // heic2any can return a Blob or Blob[] - handle both cases
@@ -166,7 +151,7 @@ export const fileToBase64 = async (file: File): Promise<string> => {
   } else if (isPng) {
     try {
       console.log('Converting PNG to JPEG...');
-      fileToConvert = await convertPngToJpeg(file, 0.9);
+      fileToConvert = await convertPngToJpeg(file);
       console.log('PNG converted to JPEG successfully');
     } catch (error) {
       console.error('PNG conversion failed:', error);
@@ -183,7 +168,7 @@ export const fileToBase64 = async (file: File): Promise<string> => {
   if (isImage && !isPng) {
     try {
       console.log('Resizing image if needed...');
-      fileToConvert = await resizeImageFile(fileToConvert, 0.9);
+      fileToConvert = await resizeImageFile(fileToConvert);
       console.log('Image resize check complete');
     } catch (error) {
       console.error('Image resize failed:', error);
