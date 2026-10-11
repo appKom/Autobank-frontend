@@ -38,7 +38,7 @@ const ProfileCard = () => {
 
         <div className="flow-root mb-2">
           <img src={groupIcon} alt="" className="float-left size-5 mr-2" />
-          {data && data.committees.length
+          {data?.committees?.length
             ? data.committees.map((committee: any, index: number) => {
                 const capitalizedName = committee.charAt(0).toUpperCase() + committee.slice(1);
                 return (
