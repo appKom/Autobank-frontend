@@ -18,10 +18,11 @@ import { useSearchParams } from 'react-router-dom';
 
 const AdminReceiptPage = () => {
   const [receiptStatus, setReceiptStatus] = useState<string | null>('NONE');
+
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState<string>(''); // The raw value from the input field
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(); // The debounced value
 
-  const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page') || 1);
   const rowsPerPage = 10;
 
@@ -30,7 +31,10 @@ const AdminReceiptPage = () => {
   }, [searchParams]);
 
   const debouncedSetSearchTerm = useMemo(
-    () => debounce((value: string) => setDebouncedSearchTerm(value), 500),
+    () =>
+      debounce((value: string) => {
+        setDebouncedSearchTerm(value);
+      }, 500),
     []
   );
 
@@ -38,6 +42,21 @@ const AdminReceiptPage = () => {
     const value = e.target.value;
 
     setSearchTerm(value);
+
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+
+      params.delete('page');
+
+      if (value.trim()) {
+        params.set('search', value);
+      } else {
+        params.delete('search');
+      }
+
+      return params;
+    });
+
     debouncedSetSearchTerm(value);
   };
 
@@ -50,10 +69,12 @@ const AdminReceiptPage = () => {
   };
 
   useEffect(() => {
-    return () => {
-      debouncedSetSearchTerm.cancel();
-    };
-  }, [debouncedSetSearchTerm]);
+    const searchFromUrl = searchParams.get('search') ?? '';
+
+    setSearchTerm(searchFromUrl);
+    setDebouncedSearchTerm(searchFromUrl);
+    debouncedSetSearchTerm.cancel();
+  }, [searchParams, debouncedSetSearchTerm]);
 
   const {
     data: receiptData,
@@ -86,6 +107,8 @@ const AdminReceiptPage = () => {
   const handleCommitteeChange = (event: any) => {
     const value = event.target.value;
     const params = new URLSearchParams(searchParams);
+
+    params.delete('page');
 
     if (value.length) {
       params.set('committees', value.join(','));
