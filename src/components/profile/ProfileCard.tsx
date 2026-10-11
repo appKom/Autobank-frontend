@@ -18,7 +18,7 @@ const ProfileCard = () => {
         <img
           src={data?.imageUrl || profilePicture}
           alt={data?.name || 'Profilbilde'}
-          className="w-full h-full rounded-full object-cover border-2 border-[#b0deca]"
+          className="w-50 h-50 rounded-full object-cover border-2 border-[#b0deca]"
         />
 
         {/* Name */}
