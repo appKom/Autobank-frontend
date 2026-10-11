@@ -3,7 +3,7 @@ import { Receipt, FileText } from 'lucide-react';
 
 export default function AdminDashboard() {
   return (
-    <div className="min-h-screen bg-emerald-700 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-[#2E6E53] flex flex-col items-center justify-center p-4">
       <div className="max-w-2xl w-full">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-white mb-2">Admin Oversikt</h1>

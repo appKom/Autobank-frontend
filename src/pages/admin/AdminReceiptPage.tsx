@@ -10,11 +10,14 @@ import {
   Select,
   TextField,
   Pagination,
+  InputAdornment,
 } from '@mui/material';
 import ReceiptTable from '../../components/receipt/ReceiptTable';
 import debounce from 'lodash.debounce';
 import AdminBadge from '../../components/admin/AdminBadge';
 import { useSearchParams } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 const AdminReceiptPage = () => {
   const [receiptStatus, setReceiptStatus] = useState<string | null>('NONE');
@@ -125,61 +128,89 @@ const AdminReceiptPage = () => {
         <AdminBadge />
         <h1 className="text-3xl font-bold pt-5 text-white">Alle kvitteringer</h1>
       </div>
-      <div className="w-full flex flex-row justify-between items-center max-w-[1100px] ml-auto mr-auto pb-5 pt-16">
-        <TextField
-          id="search"
-          placeholder="Søk på anledning..."
-          variant="outlined"
-          onChange={handleSearchChange}
-          value={searchTerm}
-          sx={{
-            backgroundColor: 'white',
-            width: '200px',
-            height: '40px',
-            borderRadius: '4px',
-            '& .MuiOutlinedInput-root': {
-              height: '40px',
-            },
-            '& .MuiInputLabel-root': {
-              top: '-5px',
-            },
-          }}
-        />
-        <FormControl sx={{ width: '200px', height: '40px' }}>
-          <Select
-            id="committeeDropdown"
-            multiple
-            value={selectedCommittees}
-            onChange={handleCommitteeChange}
-            inputProps={{ 'aria-label': 'Without label' }}
-            input={<OutlinedInput notched={false} />}
-            displayEmpty
-            renderValue={(selected) => {
-              if (selected.length === 0) {
-                return <span className="text-gray-500">Filtrer...</span>;
-              }
-              return selected.join(', ');
+      <div className="w-full max-w-[600px] mx-auto pb-5 pt-10">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          {/* Search */}
+          <TextField
+            id="search"
+            placeholder="Søk på anledning..."
+            variant="outlined"
+            onChange={handleSearchChange}
+            value={searchTerm}
+            className="w-full min-w-0 sm:flex-[2]"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  {' '}
+                  <SearchIcon sx={{ color: '#6b7280' }} />{' '}
+                </InputAdornment>
+              ),
             }}
             sx={{
               backgroundColor: 'white',
-              height: '40px',
-              textAlign: 'left',
+              borderRadius: '8px',
+              '& .MuiOutlinedInput-root': {
+                height: '48px',
+                borderRadius: '8px',
+                '& fieldset': { borderColor: '#e5e7eb' },
+                '&:hover fieldset': { borderColor: '#9ca3af' },
+                '&.Mui-focused fieldset': { borderColor: '#64748b' },
+              },
             }}
-            MenuProps={{
-              disableScrollLock: true,
-              container: document.body,
-              keepMounted: true,
-            }}
-          >
-            {committeeData &&
-              committeeData?.map((committee: Committee) => (
-                <MenuItem key={committee.id} value={committee.name}>
-                  <Checkbox checked={selectedCommittees.includes(committee.name)} />
-                  {committee.name}
-                </MenuItem>
-              ))}
-          </Select>
-        </FormControl>
+          />
+
+          {/* Committee filter */}
+          <FormControl className="w-full min-w-0 sm:flex-1">
+            <Select
+              id="committeeDropdown"
+              multiple
+              value={selectedCommittees}
+              onChange={handleCommitteeChange}
+              inputProps={{ 'aria-label': 'Without label' }}
+              input={
+                <OutlinedInput
+                  notched={false}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      {' '}
+                      <FilterListIcon sx={{ color: '#6b7280' }} />{' '}
+                    </InputAdornment>
+                  }
+                />
+              }
+              displayEmpty
+              renderValue={(selected) => {
+                if (selected.length === 0) {
+                  return <span className="text-gray-500">Filtrer...</span>;
+                }
+                return selected.join(', ');
+              }}
+              sx={{
+                backgroundColor: 'white',
+                height: '48px',
+                borderRadius: '8px',
+                textAlign: 'left',
+                '& .MuiOutlinedInput-notchedOutline': { borderColor: '#e5e7eb' },
+                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#9ca3af' },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#64748b' },
+                '& .MuiSelect-select': { display: 'flex', alignItems: 'center' },
+              }}
+              MenuProps={{
+                disableScrollLock: true,
+                container: document.body,
+                keepMounted: true,
+              }}
+            >
+              {committeeData &&
+                committeeData?.map((committee: Committee) => (
+                  <MenuItem key={committee.id} value={committee.name}>
+                    <Checkbox checked={selectedCommittees.includes(committee.name)} />
+                    {committee.name}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+        </div>
       </div>
       {(receiptData || receiptDataLoading) && (
         <ReceiptTable
