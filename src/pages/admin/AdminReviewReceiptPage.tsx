@@ -35,12 +35,12 @@ const AdminReviewReceiptPage = () => {
     const receiptreview: ReceiptReview = {
       receiptId: receiptid as string,
       status: newReviewStatus,
-      comment: reviewComment,
+      comment: reviewComment ?? '',
     };
 
     try {
       await postReceiptReview(receiptreview);
-      alert('Review sent');
+      alert('Tilbakemelding sendt');
       navigate(`/admin/kvittering?${searchParams.toString()}`);
     } catch (error) {
       console.error(error);
@@ -243,7 +243,7 @@ const AdminReviewReceiptPage = () => {
               </div>
               <div className="">
                 <label htmlFor="comment" className="block text-sm font-medium">
-                  Kommentar
+                  Kommentar {newReviewStatus === 'DENIED'}
                 </label>
                 <textarea
                   id="comment"
@@ -252,7 +252,7 @@ const AdminReviewReceiptPage = () => {
                   rows={3}
                   className="mt-1 p-3 block w-full sm:text-sm border-gray-300 rounded-md bg-white bg-opacity-20 text-white placeholder-gray-400"
                   placeholder="Add a comment..."
-                  required
+                  required={newReviewStatus === 'DENIED'}
                 ></textarea>
               </div>
               <button

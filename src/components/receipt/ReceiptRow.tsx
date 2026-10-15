@@ -41,16 +41,17 @@ const ReceiptRow = ({ receipt }: ReceiptOverviewProps) => {
           </span>
         </div>
       </td>
-      <td className="bg-[#b0deca] text-left font-semibold hidden md:table-cell">
-        {receipt.committeeName}
+      <td className="bg-[#b0deca] text-left font-semibold hidden md:table-cell pr-5">
+        <div className="w-full truncate" title={receipt.committeeName}>
+          {receipt.committeeName}
+        </div>
       </td>
-      <td className="bg-[#b0deca] text-left ">{receipt.receiptName}</td>
+      <td className="bg-[#b0deca] text-left">{receipt.receiptName}</td>
       <td className="bg-[#b0deca] text-left hidden lg:table-cell  font-semibold ">
         {receipt.paymentOrCard === 'Payment' ? 'Utlegg' : 'Kort'}
       </td>
       <td className="bg-[#b0deca] text-left max-h-3 hidden lg:table-cell max-w-[150px] overflow-hidden line-clamp-3">
-        {receipt.receiptDescription.slice(0, 60)}
-        {receipt.receiptDescription.length > 60 ? '...' : ''}
+        {receipt.amount}
       </td>
       <td className="bg-[#b0deca] text-center w-[110px] rounded-tr rounded-br font-semibold">
         {`${new Date(receipt.receiptCreatedAt).getDate()}.${

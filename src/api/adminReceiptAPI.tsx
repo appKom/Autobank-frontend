@@ -35,7 +35,7 @@ export interface CompleteReceipt {
 export interface ReceiptReview {
   receiptId: string;
   status: string;
-  comment: string;
+  comment?: string;
 }
 
 export interface AllReceiptsResponse {

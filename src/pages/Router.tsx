@@ -1,4 +1,4 @@
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import ApplicationPage from './ApplicationPage';
 import Authcallback from '../pages/Authcallback';
 import FaqPage from './FaqPage';
@@ -98,22 +98,20 @@ const Router = () => {
   ];
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {isAuthenticated &&
-          isAdmin() &&
-          adminroutes.map((route) => {
-            return <Route key={route.key} path={route.path} element={route.element} />;
-          })}
-        {isAuthenticated &&
-          authenticatedroutes.map((route) => {
-            return <Route key={route.key} path={route.path} element={route.element} />;
-          })}
-        {unauthenticatedroutes.map((route) => {
+    <Routes>
+      {isAuthenticated &&
+        isAdmin() &&
+        adminroutes.map((route) => {
           return <Route key={route.key} path={route.path} element={route.element} />;
         })}
-      </Routes>
-    </BrowserRouter>
+      {isAuthenticated &&
+        authenticatedroutes.map((route) => {
+          return <Route key={route.key} path={route.path} element={route.element} />;
+        })}
+      {unauthenticatedroutes.map((route) => {
+        return <Route key={route.key} path={route.path} element={route.element} />;
+      })}
+    </Routes>
   );
 };
 
