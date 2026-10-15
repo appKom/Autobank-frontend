@@ -83,6 +83,7 @@ const ReceiptPage = () => {
   ];
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB per file
+  const MAX_TOTAL_FILES_SIZE = 6 * 1024 * 1024; 
 
   const { data, isError } = useQuery({
     queryKey: ['committees'],
@@ -163,6 +164,17 @@ const ReceiptPage = () => {
             tooLargeFiles.map((f) => f.name).join(', ')
         );
         return;
+      }
+
+      let totalSize = 0; 
+      for (let i = 0; i < convertedAttachments.length; i++){
+        totalSize += convertedAttachments[i].base64.length * 0.75;
+      }
+
+      if (totalSize > MAX_TOTAL_FILES_SIZE){
+        setDisableSubmit(false);
+        alert("Vedleggene er for store til sammen. Maksimalt totalt tillatt er er 6MB.");
+        return; 
       }
 
       const body: ReceiptRequestBody = {
