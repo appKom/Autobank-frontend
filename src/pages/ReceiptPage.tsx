@@ -37,6 +37,7 @@ const ReceiptPage = () => {
 
   const {
     register,
+    watch,
     control,
     handleSubmit,
     setValue,
@@ -83,7 +84,7 @@ const ReceiptPage = () => {
   ];
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB per file
-  const MAX_TOTAL_FILES_SIZE = 6 * 1024 * 1024; 
+  const MAX_TOTAL_FILES_SIZE = 6 * 1024 * 1024;
 
   const { data, isError } = useQuery({
     queryKey: ['committees'],
@@ -130,6 +131,9 @@ const ReceiptPage = () => {
 
   const stripNonDigits = (value: string) => value.replace(/\D/g, '');
 
+  const description = watch('description') || '';
+  const characters = description.length;
+
   const submitform = async (data: any) => {
     setDisableSubmit(true);
 
@@ -166,15 +170,15 @@ const ReceiptPage = () => {
         return;
       }
 
-      let totalSize = 0; 
-      for (let i = 0; i < convertedAttachments.length; i++){
+      let totalSize = 0;
+      for (let i = 0; i < convertedAttachments.length; i++) {
         totalSize += convertedAttachments[i].base64.length * 0.75;
       }
 
-      if (totalSize > MAX_TOTAL_FILES_SIZE){
+      if (totalSize > MAX_TOTAL_FILES_SIZE) {
         setDisableSubmit(false);
-        alert("Vedleggene er for store til sammen. Maksimalt totalt tillatt er er 6MB.");
-        return; 
+        alert('Vedleggene er for store til sammen. Maksimalt totalt tillatt er er 6MB.');
+        return;
       }
 
       const body: ReceiptRequestBody = {
@@ -431,12 +435,16 @@ const ReceiptPage = () => {
             </div>
             <p className="text-red-500 text-sm min-h-[1.25rem]">{errors.attachments?.message}</p>
           </div>
-          <div className="flex-col mt-[20px] mx-5">
+          <div className="relative mx-5">
             <p className="text-white w-full text-left text-l mb-[5px]">Kommentarer</p>
             <textarea
-              className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[120px] bg-white"
+              maxLength={500}
+              className="w-full border-2 border-gray-300 rounded-lg p-4 flex flex-col items-center justify-center h-[180px] bg-white"
               {...register('description', getReceiptFieldValidation(schema, 'description'))}
-            ></textarea>
+            />
+            <span className="absolute bottom-3 right-4 text-sm text-gray-400 pointer-events-none">
+              {characters} / 500
+            </span>
           </div>
           <div>
             <button
