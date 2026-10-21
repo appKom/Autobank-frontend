@@ -56,7 +56,7 @@ const FileUpload = ({ files, onFileChange, multiple = true }: FileUploadProps) =
               className="flex justify-between items-center p-2 border-b border-gray-200"
             >
               <span className="text-white">{file.name}</span>
-              <button onClick={() => removeFile(index)} className="text-red-500 hover:text-red-700">
+              <button type="button" onClick={() => removeFile(index)} className="text-red-500 hover:text-red-700">
                 Fjern
               </button>
             </li>
