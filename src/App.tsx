@@ -7,6 +7,7 @@ import Footer from './components/universal/Footer';
 import { useAuth } from 'react-oidc-context';
 import axios from 'axios';
 import { Analytics } from '@vercel/analytics/react';
+import { BrowserRouter } from 'react-router-dom';
 
 function App() {
   const auth = useAuth();
@@ -15,12 +16,14 @@ function App() {
   }
 
   return (
-    <div className="App bg-[#2e6e53]">
-      <Navbar />
-      <Router />
-      <Footer />
-      <Analytics />
-    </div>
+    <BrowserRouter>
+      <div className="App bg-[#2e6e53]">
+        <Navbar />
+        <Router />
+        <Footer />
+        <Analytics />
+      </div>
+    </BrowserRouter>
   );
 }
 

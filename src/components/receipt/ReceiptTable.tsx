@@ -59,7 +59,15 @@ const ReceiptTable = ({
         {receiptsLoading ? (
           <Oval height={40} />
         ) : receipts && receipts.length > 0 ? (
-          <table className="w-full border-separate border-spacing-y-3 max-w-[1100px] ml-auto mr-auto">
+          <table className="w-full table-fixed border-separate border-spacing-y-3 max-w-[1100px] ml-auto mr-auto">
+            <colgroup>
+              <col className="w-[50px]" />
+              <col className="w-[180px] hidden md:table-column" />
+              <col className="w-[35%]" />
+              <col className="w-[15%] hidden lg:table-column" />
+              <col className="w-[12%] hidden lg:table-column" />
+              <col className="w-[110px]" />
+            </colgroup>
             <thead>
               <tr>
                 <th></th>
@@ -71,7 +79,7 @@ const ReceiptTable = ({
                   Type
                 </th>
                 <th className="text-left text-white text-xl font-normal hidden lg:table-cell">
-                  Kommentar
+                  Beløp
                 </th>
                 <th className="text-middle w-[110px] text-white text-xl font-normal">Dato</th>
               </tr>

@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
-
-import MenuIcon from '@mui/icons-material/Menu';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import { useAuth } from 'react-oidc-context';
 import LogOutIcon from '../../icons/LogOutIcon';
-import Button from './Button';
-import { Bars3Icon, XMarkIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { checkUserResponse } from '../../pages/Authcallback';
 import useAutobankStore from '../../store/autobankstore';
-import { useAuth } from 'react-oidc-context';
 import '../../styles/navbar.css';
+import Button from './Button';
+import { useNavigate } from 'react-router-dom';
 
 type NavdropdownProps = {
   user?: checkUserResponse | null;
@@ -20,11 +19,12 @@ type NavdropdownProps = {
 
 const routes = [
   { name: 'Kvittering', path: `${import.meta.env.BASE_URL}kvittering` },
-  { name: "Utstyrspotten", path: `${import.meta.env.BASE_URL}soknad` },
+  { name: 'Utstyrspotten', path: `${import.meta.env.BASE_URL}soknad` },
   { name: 'Min side', path: `${import.meta.env.BASE_URL}minside` },
 ];
 
 const NavDropdown = (props: NavdropdownProps) => {
+  const navigate = useNavigate();
   console.log(props.isAuthenticated);
   return (
     <div
@@ -35,7 +35,10 @@ const NavDropdown = (props: NavdropdownProps) => {
       {props.isAuthenticated ? (
         <div>
           <div className="">
-            <button className="hover:bg-green-900 flex items-center w-full rounded-[10px] justify-center relativ p-4  h-[50px] bg-[#2e6e53] justify-self-end relative z-20 ">
+            <button
+              onClick={() => navigate('/minside')}
+              className="hover:bg-green-900 flex items-center w-full rounded-[10px] justify-center relativ p-4  h-[50px] bg-[#2e6e53] justify-self-end relative z-20 "
+            >
               <img
                 src={`${import.meta.env.BASE_URL}resources/logo/online-logo-white.png`}
                 className="h-5 mr-2"
@@ -87,6 +90,7 @@ const NavDropdown = (props: NavdropdownProps) => {
 };
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [showNavDropdown, setShowNavDropdown] = useState<Boolean>(false);
 
   const { userInfo, setUserInfo } = useAutobankStore();
@@ -189,7 +193,10 @@ const Navbar = () => {
                 />
               </div>
               <div>
-                <button className="flex rounded-[15px] items-center justify-center relativ p-4  h-[50px] bg-white justify-self-end relative z-20">
+                <button
+                  onClick={() => navigate('/minside')}
+                  className="flex rounded-[15px] items-center justify-center relativ p-4  h-[50px] bg-white justify-self-end relative z-20"
+                >
                   <img
                     src={`${import.meta.env.BASE_URL}resources/logo/online-logo-blue.png`}
                     className="h-5 mr-2"
