@@ -21,11 +21,11 @@ const ReceiptTable = ({
     receiptStatus === 'NONE' ? 'active' : receiptStatus === 'DONE' ? 'history' : 'none';
 
   const handleSetActive = () => {
-    setReceiptStatus(receiptStatus === 'NONE' ? null : 'NONE');
+    setReceiptStatus(receiptStatus === 'NONE' ? 'DONE' : 'NONE');
   };
 
   const handleSetHistory = () => {
-    setReceiptStatus(receiptStatus === 'DONE' ? null : 'DONE');
+    setReceiptStatus(receiptStatus === 'DONE' ? 'NONE' : 'DONE');
   };
 
   const sortedReceipts = React.useMemo(() => {

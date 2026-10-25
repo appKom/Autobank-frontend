@@ -20,11 +20,26 @@ import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 
 const AdminReceiptPage = () => {
-  const [receiptStatus, setReceiptStatus] = useState<string | null>('NONE');
-
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState<string>(''); // The raw value from the input field
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(); // The debounced value
+
+  const receiptStatus = searchParams.get('status') ?? 'NONE';
+
+  const setReceiptStatus = (status: string | null) => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+
+      if (status) {
+        params.set('status', status);
+      } else {
+        params.delete('status');
+      }
+
+      params.delete('page');
+      return params;
+    });
+  };
 
   const page = Number(searchParams.get('page') || 1);
   const rowsPerPage = 10;
