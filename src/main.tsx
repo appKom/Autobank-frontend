@@ -11,10 +11,10 @@ import { WebStorageStateStore } from 'oidc-client-ts';
 const configuration: AuthProviderProps = {
   client_id: import.meta.env.VITE_AUTH0_CLIENT_ID,
   redirect_uri: import.meta.env.VITE_AUTH0_REDIRECT_URI,
-  scope: 'openid profile email',
+  scope: 'openid profile email offline_access',
   authority: import.meta.env.VITE_AUTH0_DOMAIN,
   metadataUrl: `${import.meta.env.VITE_AUTH0_DOMAIN}/.well-known/openid-configuration`,
-  automaticSilentRenew: false,
+  automaticSilentRenew: true,
   filterProtocolClaims: true,
   loadUserInfo: true,
   revokeTokensOnSignout: true,
