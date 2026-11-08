@@ -148,7 +148,7 @@ const AdminReceiptPage = () => {
           {/* Search */}
           <TextField
             id="search"
-            placeholder="Søk på anledning..."
+            placeholder="Søk på anledning eller navn..."
             variant="outlined"
             onChange={handleSearchChange}
             value={searchTerm}
@@ -233,6 +233,8 @@ const AdminReceiptPage = () => {
           receiptsLoading={receiptDataLoading}
           receiptStatus={receiptStatus}
           setReceiptStatus={setReceiptStatus}
+          showUser
+          searchTerm={debouncedSearchTerm}
         />
       )}
       {receiptData && receiptData.total > 0 && (

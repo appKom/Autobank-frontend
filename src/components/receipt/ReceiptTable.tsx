@@ -3,12 +3,15 @@ import ReceiptRow from '../../components/receipt/ReceiptRow';
 import { Receipt_Info } from '../../api/adminReceiptAPI';
 import Button from '../../components/universal/Button';
 import { Oval } from 'react-loader-spinner';
+import { useSearchParams } from 'react-router-dom';
 
 interface ReceiptTableProps {
   receipts: Receipt_Info[] | undefined;
   receiptsLoading: boolean;
   receiptStatus: String | undefined | null;
   setReceiptStatus: (status: string | null) => void;
+  showUser?: boolean;
+  searchTerm?: string | null;
 }
 
 const ReceiptTable = ({
@@ -16,6 +19,8 @@ const ReceiptTable = ({
   receiptsLoading,
   receiptStatus,
   setReceiptStatus,
+  showUser = false,
+  searchTerm,
 }: ReceiptTableProps) => {
   const selectedButton =
     receiptStatus === 'NONE' ? 'active' : receiptStatus === 'DONE' ? 'history' : 'none';
@@ -30,7 +35,27 @@ const ReceiptTable = ({
 
   type HistoryFilter = 'ALL' | 'APPROVED' | 'DENIED';
 
-  const [historyFilter, setHistoryFilter] = React.useState<HistoryFilter>('ALL');
+  // Kept in the URL (like the tab) so it survives navigating to a receipt and back.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const historyFilterParam = searchParams.get('historyFilter');
+  const historyFilter: HistoryFilter =
+    historyFilterParam === 'APPROVED' || historyFilterParam === 'DENIED'
+      ? historyFilterParam
+      : 'ALL';
+
+  const setHistoryFilter = (value: HistoryFilter) => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+
+      if (value === 'ALL') {
+        params.delete('historyFilter');
+      } else {
+        params.set('historyFilter', value);
+      }
+
+      return params;
+    });
+  };
 
   const filteredReceipts = React.useMemo(() => {
     if (!receipts) return [];
@@ -100,6 +125,7 @@ const ReceiptTable = ({
               <col className="w-[50px]" />
               <col className="w-[180px] hidden md:table-column" />
               <col className="w-[35%]" />
+              {showUser && <col className="w-[15%] hidden lg:table-column" />}
               <col className="w-[15%] hidden lg:table-column" />
               <col className="w-[12%] hidden lg:table-column" />
               <col className="w-[110px]" />
@@ -111,6 +137,11 @@ const ReceiptTable = ({
                   Komité
                 </th>
                 <th className="text-left text-white text-xl font-normal">Anledning</th>
+                {showUser && (
+                  <th className="text-left text-white text-xl font-normal hidden lg:table-cell">
+                    Navn
+                  </th>
+                )}
                 <th className="text-left text-white text-xl font-normal hidden lg:table-cell">
                   Type
                 </th>
@@ -122,7 +153,12 @@ const ReceiptTable = ({
             </thead>
             <tbody>
               {filteredReceipts.map((receipt) => (
-                <ReceiptRow key={receipt.receiptId} receipt={receipt} />
+                <ReceiptRow
+                  key={receipt.receiptId}
+                  receipt={receipt}
+                  showUser={showUser}
+                  searchTerm={searchTerm}
+                />
               ))}
             </tbody>
           </table>

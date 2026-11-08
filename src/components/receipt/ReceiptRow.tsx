@@ -1,12 +1,15 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Receipt_Info } from '../../api/adminReceiptAPI';
 import { IoIosMail, IoIosCloseCircle, IoMdCheckmark } from 'react-icons/io';
+import HighlightText from '../universal/HighlightText';
 
 interface ReceiptOverviewProps {
   receipt: Receipt_Info;
+  showUser?: boolean;
+  searchTerm?: string | null;
 }
 
-const ReceiptRow = ({ receipt }: ReceiptOverviewProps) => {
+const ReceiptRow = ({ receipt, showUser = false, searchTerm }: ReceiptOverviewProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -46,7 +49,16 @@ const ReceiptRow = ({ receipt }: ReceiptOverviewProps) => {
           {receipt.committeeName}
         </div>
       </td>
-      <td className="bg-[#b0deca] text-left">{receipt.receiptName}</td>
+      <td className="bg-[#b0deca] text-left">
+        <HighlightText text={receipt.receiptName} query={searchTerm} />
+      </td>
+      {showUser && (
+        <td className="bg-[#b0deca] text-left hidden lg:table-cell pr-5">
+          <div className="w-full truncate" title={receipt.userFullname}>
+            <HighlightText text={receipt.userFullname} query={searchTerm} />
+          </div>
+        </td>
+      )}
       <td className="bg-[#b0deca] text-left hidden lg:table-cell  font-semibold ">
         {receipt.paymentOrCard === 'Payment' ? 'Utlegg' : 'Kort'}
       </td>
