@@ -28,12 +28,23 @@ const ReceiptTable = ({
     setReceiptStatus(receiptStatus === 'DONE' ? 'NONE' : 'DONE');
   };
 
-  const sortedReceipts = React.useMemo(() => {
+  type HistoryFilter = 'ALL' | 'APPROVED' | 'DENIED';
+
+  const [historyFilter, setHistoryFilter] = React.useState<HistoryFilter>('ALL');
+
+  const filteredReceipts = React.useMemo(() => {
     if (!receipts) return [];
-    return [...receipts].sort(
+
+    const sorted = [...receipts].sort(
       (a, b) => new Date(b.receiptCreatedAt).getTime() - new Date(a.receiptCreatedAt).getTime()
     );
-  }, [receipts]);
+
+    if (selectedButton !== 'history' || historyFilter === 'ALL') {
+      return sorted;
+    }
+
+    return sorted.filter((receipt) => receipt.latestReviewStatus === historyFilter);
+  }, [receipts, selectedButton, historyFilter]);
 
   return (
     <div>
@@ -55,10 +66,35 @@ const ReceiptTable = ({
 
       <hr className="max-w-[1100px] ml-auto mr-auto" />
 
-      <div className="min-h-[280px] flex justify-center items-center">
+      {/* Filter on approved/denied receipt when in history */}
+      {selectedButton === 'history' && (
+        <div className="flex gap-2 px-5 py-3 max-w-[1100px] mx-auto">
+          {(
+            [
+              { label: 'Alle', value: 'ALL' },
+              { label: 'Godkjent', value: 'APPROVED' },
+              { label: 'Avvist', value: 'DENIED' },
+            ] as const
+          ).map((filter) => (
+            <button
+              key={filter.value}
+              onClick={() => setHistoryFilter(filter.value)}
+              className={`rounded-full px-4 py-1.5 text-sm border transition-colors ${
+                historyFilter === filter.value
+                  ? 'bg-white text-[#477561] border-white'
+                  : 'text-white border-white/40 hover:bg-white/10'
+              }`}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div className="min-h-[300px] flex justify-center items-start">
         {receiptsLoading ? (
           <Oval height={40} />
-        ) : receipts && receipts.length > 0 ? (
+        ) : filteredReceipts.length > 0 ? (
           <table className="w-full table-fixed border-separate border-spacing-y-3 max-w-[1100px] ml-auto mr-auto">
             <colgroup>
               <col className="w-[50px]" />
@@ -85,13 +121,17 @@ const ReceiptTable = ({
               </tr>
             </thead>
             <tbody>
-              {sortedReceipts.map((receipt) => (
+              {filteredReceipts.map((receipt) => (
                 <ReceiptRow key={receipt.receiptId} receipt={receipt} />
               ))}
             </tbody>
           </table>
         ) : (
-          <p className="text-middle text-white text-xl font-normal pt-5">
+          <p
+            className={`text-middle text-white text-xl font-normal ${
+              selectedButton === 'history' ? 'pt-5' : 'pt-12'
+            }`}
+          >
             Ingen kvitteringer å vise
           </p>
         )}
