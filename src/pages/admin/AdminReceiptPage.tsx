@@ -20,11 +20,26 @@ import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 
 const AdminReceiptPage = () => {
-  const [receiptStatus, setReceiptStatus] = useState<string | null>('NONE');
-
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState<string>(''); // The raw value from the input field
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(); // The debounced value
+
+  const receiptStatus = searchParams.get('status') ?? 'NONE';
+
+  const setReceiptStatus = (status: string | null) => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+
+      if (status) {
+        params.set('status', status);
+      } else {
+        params.delete('status');
+      }
+
+      params.delete('page');
+      return params;
+    });
+  };
 
   const page = Number(searchParams.get('page') || 1);
   const rowsPerPage = 10;
@@ -133,7 +148,7 @@ const AdminReceiptPage = () => {
           {/* Search */}
           <TextField
             id="search"
-            placeholder="Søk på anledning..."
+            placeholder="Søk på anledning eller navn..."
             variant="outlined"
             onChange={handleSearchChange}
             value={searchTerm}
@@ -183,7 +198,20 @@ const AdminReceiptPage = () => {
                 if (selected.length === 0) {
                   return <span className="text-gray-500">Filtrer...</span>;
                 }
-                return selected.join(', ');
+                const extra = selected.length - 1;
+                return (
+                  <span
+                    className="flex items-center gap-2 min-w-0 w-full"
+                    title={selected.join(', ')}
+                  >
+                    <span className="truncate">{selected[0]}</span>
+                    {extra > 0 && (
+                      <span className="shrink-0 rounded-full bg-gray-200 px-2 py-0.5 text-xs text-gray-700">
+                        +{extra}
+                      </span>
+                    )}
+                  </span>
+                );
               }}
               sx={{
                 backgroundColor: 'white',
@@ -218,6 +246,8 @@ const AdminReceiptPage = () => {
           receiptsLoading={receiptDataLoading}
           receiptStatus={receiptStatus}
           setReceiptStatus={setReceiptStatus}
+          showUser
+          searchTerm={debouncedSearchTerm}
         />
       )}
       {receiptData && receiptData.total > 0 && (

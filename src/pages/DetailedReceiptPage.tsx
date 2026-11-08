@@ -95,7 +95,7 @@ const DetailedReceiptPage = () => {
                 </div>
               </div>
               <div className="flex-col w-full">
-                <p className="text-left tracking-wide">Bruker</p>
+                <p className="text-left tracking-wide">Navn</p>
                 <div className="flex items-center bg-white bg-opacity-10 text-white p-3 rounded w-full">
                   <UserIcon className="h-5 w-5 mr-2" />
                   <span>{data.userFullname}</span>

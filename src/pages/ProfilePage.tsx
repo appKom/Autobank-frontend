@@ -9,9 +9,26 @@ import { useSearchParams } from 'react-router-dom';
 const ProfilePage = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(); // The debounced value
   const rowsPerPage = 5;
-  const [receiptStatus, setReceiptStatus] = useState<string | null>('NONE');
+  // const [receiptStatus, setReceiptStatus] = useState<string | null>('NONE');
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page') || 1);
+
+  const receiptStatus = searchParams.get('status') ?? 'NONE';
+
+  const setReceiptStatus = (status: string | null) => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+
+      if (status) {
+        params.set('status', status);
+      } else {
+        params.delete('status');
+      }
+
+      params.delete('page');
+      return params;
+    });
+  };
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setSearchParams((prev) => {
