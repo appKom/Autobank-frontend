@@ -35,7 +35,6 @@ const ReceiptTable = ({
 
   type HistoryFilter = 'ALL' | 'APPROVED' | 'DENIED';
 
-  // Kept in the URL (like the tab) so it survives navigating to a receipt and back.
   const [searchParams, setSearchParams] = useSearchParams();
   const historyFilterParam = searchParams.get('historyFilter');
   const historyFilter: HistoryFilter =

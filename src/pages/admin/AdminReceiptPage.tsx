@@ -198,7 +198,20 @@ const AdminReceiptPage = () => {
                 if (selected.length === 0) {
                   return <span className="text-gray-500">Filtrer...</span>;
                 }
-                return selected.join(', ');
+                const extra = selected.length - 1;
+                return (
+                  <span
+                    className="flex items-center gap-2 min-w-0 w-full"
+                    title={selected.join(', ')}
+                  >
+                    <span className="truncate">{selected[0]}</span>
+                    {extra > 0 && (
+                      <span className="shrink-0 rounded-full bg-gray-200 px-2 py-0.5 text-xs text-gray-700">
+                        +{extra}
+                      </span>
+                    )}
+                  </span>
+                );
               }}
               sx={{
                 backgroundColor: 'white',

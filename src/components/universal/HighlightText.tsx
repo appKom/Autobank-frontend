@@ -5,7 +5,6 @@ interface HighlightTextProps {
 
 const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-// Wraps every case-insensitive occurrence of `query` in `text` in a <mark>.
 const HighlightText = ({ text, query }: HighlightTextProps) => {
   const trimmed = query?.trim();
   if (!trimmed) return <>{text}</>;
