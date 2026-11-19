@@ -166,6 +166,12 @@ const AdminReviewReceiptPage = () => {
                         <span className="font-bold">Dato: </span>
                         {formatDate(data.latestReviewCreatedAt)}
                       </p>
+                      {data.latestReviewerName && (
+                        <p className="ml-2 my-2">
+                          <span className="font-bold">Behandlet av: </span>
+                          {data.latestReviewerName}
+                        </p>
+                      )}
                       <p className="ml-2">
                         <span className="font-bold">Kommentar: </span>
                         {data.latestReviewComment}
